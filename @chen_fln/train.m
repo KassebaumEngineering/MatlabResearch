@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.4 1997/11/08 04:45:25 jak Exp $
+% $Id: train.m,v 1.5 1997/11/08 05:43:28 jak Exp $
 %
 
   % ---------------------------------------
@@ -124,11 +124,7 @@ function p = train(p, I_samples, O_samples, varargin)
   % ---------------------------------------
   % Form Convergence Criterion
   %
-    SEC = DataCnt * log( sse ) ...
-              + ParamCnt * log( DataCnt );
-    SECprev = 2 * SEC;
-    
-    fprintf( 1, '%d nodes: SEC = %f\n', p.hidden_units, SEC );
+    fprintf( 1, '%d nodes: sse = %f, rcond = %e\n', p.hidden_units, sse, rcond( HtH ));
     
     if 1 == p.freezeHiddenLayer
         return;
@@ -160,7 +156,8 @@ function p = train(p, I_samples, O_samples, varargin)
         augHtB = [ HtB  ; (V' * O_samples) ];
         augH = [ H, V ];
         hidden_units = p.hidden_units+AugmentCnt;
-
+        rCondition = rcond( augHtH );
+        
       % ---------------------------------------
       % Solve for new Output Layer Weights
       % (Standard Method)
@@ -187,9 +184,9 @@ function p = train(p, I_samples, O_samples, varargin)
       %
         Y = (Wo * augH');
         err =  Y - O_samples';
-        sse = 0.0;
+        newsse = 0.0;
         for i=1:outputs
-            sse = sse + err(i, :) * err(i, :)' ;
+            newsse = newsse + err(i, :) * err(i, :)' ;
         end
         
       % ---------------------------------------
@@ -200,14 +197,13 @@ function p = train(p, I_samples, O_samples, varargin)
         
       % ---------------------------------------
       % Form Convergence Criterion
-      %
-        newSEC = DataCnt * log( sse ) ...
-                 +  ParamCnt * log( DataCnt );
-              
-        fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', hidden_units, newSEC, sse);
+      %              
+        fprintf( 1, '%d nodes: sse = %f, rcond = %e\n', hidden_units, newsse, rCondition);
         
-        if ( newSEC < SEC )
-            SEC = newSEC;
+        if ( rCondition < 0.5*10^-6 )
+            AugmentCnt = AugmentCnt-1;
+        elseif ( newsse < sse )
+            sse = newsse;
             HtH = augHtH;
             HtB = augHtB;
             H   = augH;
@@ -215,11 +211,12 @@ function p = train(p, I_samples, O_samples, varargin)
             p.Bh = Bh;
             p.hidden_units = hidden_units;
             p.Wo = Wo;
-            iterate = 0;
-            quit = 0;
-        elseif (10 < iterate) & (AugmentCnt == 1)
-            fprintf( 1, 'DONE! %d nodes: SEC = %f\n', p.hidden_units, SEC );
-            quit = 1;            
+        end
+        
+        if (10 < iterate) & (AugmentCnt <= 1)
+            fprintf( 1, 'DONE! %d nodes: sse = %f, rcond = %e\n', ...
+                p.hidden_units, sse, rCondition );
+            quit = 1; 
         elseif (10 < iterate)
             iterate = 0;
             quit = 0;
@@ -228,6 +225,8 @@ function p = train(p, I_samples, O_samples, varargin)
             iterate = iterate + 1;
             quit = 0;
         end
+           
+        
      end
      
 %endfunction train
@@ -235,6 +234,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.5  1997/11/08 05:43:28  jak
+% Converted chen_fln to use sse and matrix condition as stopping criteria. -jak
+%
 % Revision 1.4  1997/11/08 04:45:25  jak
 % Used experience from SOPNET to improve Chen_fln. -jak
 %
