@@ -13,7 +13,7 @@ function p = collection( label , varargin )
 % elements.  Since each data object has a label,
 % it may be retrieved individually by that label.
 %
-% $Id: collection.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: collection.m,v 1.2 1997/11/18 16:48:27 jak Exp $
 %
   
   p.label = label;
@@ -35,7 +35,10 @@ function p = collection( label , varargin )
               p.hasIoData = 0;
               p.inputs  = getInputSize ( p.dataArray(i) );
           else
-              fprintf( 1, 'collection error! arg %d is not a "data" object!', i+1 );
+              fprintf( 1, ...
+                  'collection error! arg %d is a %s, not a "data" object!', ...
+                  i+1 , class( varargin{i} )  ...
+              );
               exit 1
           end
           
@@ -71,7 +74,10 @@ function p = collection( label , varargin )
 % History:
 % 
 % $Log: collection.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.2  1997/11/18 16:48:27  jak
+% Fixing some problems in dealing with collections. -jak
+%
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

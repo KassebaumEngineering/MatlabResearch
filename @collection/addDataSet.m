@@ -10,7 +10,7 @@ function p = addDataSet( p, varargin )
 % number of inputs and outputs is fixed for the 
 % collection.
 %
-% $Id: addDataSet.m,v 1.2 1997/11/07 05:39:56 jak Exp $
+% $Id: addDataSet.m,v 1.3 1997/11/18 16:48:26 jak Exp $
 %
 
   for i=1:nargin-1
@@ -20,11 +20,11 @@ function p = addDataSet( p, varargin )
           p = collection( p.label, varargin{:} );
           break;
           
-      elseif isa( aDataSet, 'iodata' ) and (1 == p.hasIoData)
+      elseif isa( aDataSet, 'iodata' ) & (1 == p.hasIoData)
           p.sets = p.sets + 1;
           p.dataArray( p.sets ) = aDataSet;
 
-      elseif isa( aDataSet,   'data' ) and (0 == p.hasIoData)
+      elseif isa( aDataSet,   'data' ) & (0 == p.hasIoData)
           p.sets = p.sets + 1;
           p.dataArray( p.sets ) = aDataSet;
 
@@ -40,6 +40,9 @@ function p = addDataSet( p, varargin )
 % History:
 % 
 % $Log: addDataSet.m,v $
+% Revision 1.3  1997/11/18 16:48:26  jak
+% Fixing some problems in dealing with collections. -jak
+%
 % Revision 1.2  1997/11/07 05:39:56  jak
 % Small inconsequential fix. -jak
 %
