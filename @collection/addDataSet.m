@@ -6,14 +6,13 @@ function p = addDataSet( p, varargin )
 %
 % Description: Adds a data Set to the collection.
 % The collection must all have the same type of
-% data - either 'iodata' or 'data'.  Alos, the
+% data - either 'iodata' or 'data'.  Also, the
 % number of inputs and outputs is fixed for the 
 % collection.
 %
-% $Id: addDataSet.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: addDataSet.m,v 1.2 1997/11/07 05:39:56 jak Exp $
 %
 
-  
   for i=1:nargin-1
       aDataSet = varargin{i};
       
@@ -41,7 +40,10 @@ function p = addDataSet( p, varargin )
 % History:
 % 
 % $Log: addDataSet.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.2  1997/11/07 05:39:56  jak
+% Small inconsequential fix. -jak
+%
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %
