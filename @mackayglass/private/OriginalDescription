@@ -1,0 +1,41 @@
+From tenorio Thu Dec 20 10:23:04 1990
+Received: from dynamo.ecn.purdue.edu by ec.ecn.purdue.edu (5.61/1.28jrs)
+	id AA22752; Thu, 20 Dec 90 10:22:58 -0500
+Received: from localhost by dynamo.ecn.purdue.edu (5.61/1.28jrs)
+	id AA28862; Thu, 20 Dec 90 10:22:56 -0500
+Message-Id: <9012201522.AA28862@dynamo.ecn.purdue.edu>
+To: jak
+Subject: [platt@synaptics.com (John Platt)
+   Subject:  Mackey-Glass data for P=85: Mackey-Glass data for P=85]
+Date: Thu, 20 Dec 90 10:22:55 EST
+From: Manoel Fernando Tenorio <tenorio>
+Status: RO
+
+
+------- Forwarded Message
+
+   From:  platt@synaptics.com (John Platt)
+   Subject:  Mackey-Glass data for P=85
+
+   				   
+     I'm going to send you two files. First, I'll send you
+   a testing file of 500 points. Then, I'll send you a
+   training file of 3000 points. The benchmark experiments
+   were for taking a training set from the beginning of
+   the training file. The benchmarks were run for training
+   set sizes of 100, 300, 500, 1000, and 3000.
+
+     The file format is a LISP structure, but it is easily
+   parsed by a C program. Each line is a separate example.
+   The first list on each line is the 4-dimensional input
+   vector. The next list is the 1-dimensional output vector.
+
+     I'm really excited to find out how well SONN will do
+   on the P=85 problem. I have benchmark data for BP,
+   Moody's RBF network, and my RANN network. 
+
+   						john
+
+------- End of Forwarded Message
+
+
