@@ -10,7 +10,7 @@ function p = addSample( p, aSampleInput, aSampleOutput )
 % the already present data, or be the 
 % first piece of data presented.
 %
-% $Id: addSample.m,v 1.1 1997/10/28 18:38:39 jak Exp $
+% $Id: addSample.m,v 1.2 1997/11/18 16:49:09 jak Exp $
 %
 
   [isamples, inputs ] = size ( aSampleInput  );
@@ -25,10 +25,10 @@ function p = addSample( p, aSampleInput, aSampleOutput )
   if 0 == p.inputs
       p.samples = isamples;
       p.inputs = inputs;
-      p.datamatrix = aSample;
+      p.datamatrix = aSampleInput;
   elseif p.inputs == inputs
       p.samples = p.samples + isamples;
-      p.datamatrix = [ p.datamatrix', aSample' ]';
+      p.datamatrix = [ p.datamatrix', aSampleInput' ]';
   else
       fprintf( 1, 'Incompatible number of input variables!');
       exit 1 
@@ -50,7 +50,10 @@ function p = addSample( p, aSampleInput, aSampleOutput )
 % History:
 % 
 % $Log: addSample.m,v $
-% Revision 1.1  1997/10/28 18:38:39  jak
-% Initial revision
+% Revision 1.2  1997/11/18 16:49:09  jak
+% Fixing a bug for the pns-hnn stuff. -jak
+%
+% Revision 1.1.1.1  1997/10/28 18:38:39  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %
