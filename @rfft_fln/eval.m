@@ -11,7 +11,7 @@ function [Yc, Y] = eval( p, I_samples )
 %     I_samples -> samples x inputs
 %
 %
-% $Id: eval.m,v 1.3 1997/11/05 04:40:09 jak Exp $
+% $Id: eval.m,v 1.4 1997/11/07 05:40:58 jak Exp $
 %
 
     % ---------------------------------------
@@ -40,10 +40,11 @@ function [Yc, Y] = eval( p, I_samples )
     % Calculate Net Output.
     %
     Y = p.Wo * [ ...
-                 tansig( rfft( Inputs' )' ), ...
-                 Inputs, ...
-                 ones( samples, 1) ...
+                  tansig( rfft( Inputs' )' ) ...
+                  ,I_samples ...
+                  ,ones( samples, 1) ...
                ]' ;
+%    Y  = p.Wo * tansig( rfft( Inputs' )' )';
 
     % ---------------------------------------
     % Assign Outputs to Classes
@@ -59,7 +60,7 @@ function [Yc, Y] = eval( p, I_samples )
         Yc( max, i ) = 1;
     end
 
-    Y = Y';
+    Y  = Y' ;
     Yc = Yc';
 
 % endfunction eval
@@ -68,6 +69,9 @@ function [Yc, Y] = eval( p, I_samples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.4  1997/11/07 05:40:58  jak
+% Its working, but not very well at least as far as performace goes. -jak
+%
 % Revision 1.3  1997/11/05 04:40:09  jak
 % Added use of the rfft and use of a sigmoidal nonlinearity. -jak
 %

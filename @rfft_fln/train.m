@@ -14,7 +14,7 @@ function p = train( p, I_samples, O_samples )
 %     I_samples -> samples x inputs
 %     O_samples -> samples x outputs
 %
-% $Id: train.m,v 1.3 1997/11/05 04:40:09 jak Exp $
+% $Id: train.m,v 1.4 1997/11/07 05:40:59 jak Exp $
 %
 
     % ---------------------------------------
@@ -54,11 +54,13 @@ function p = train( p, I_samples, O_samples )
     % ---------------------------------------
     % Calculate Enhancement Functions of Inputs.
     %
+
     H = [ ...
-          tansig( rfft( Inputs' )' ), ...
-          Inputs, ...
-          ones( isamples, 1) ...
+          tansig( rfft( Inputs' )' ) ...
+          ,I_samples ...
+          ,ones( isamples, 1) ...
         ];
+%    H = tansig( rfft( Inputs' )' ) ;
 
     HtH = H' * H;
     HtB = H' * O_samples ;
@@ -80,6 +82,9 @@ function p = train( p, I_samples, O_samples )
 % History:
 % 
 % $Log: train.m,v $
+% Revision 1.4  1997/11/07 05:40:59  jak
+% Its working, but not very well at least as far as performace goes. -jak
+%
 % Revision 1.3  1997/11/05 04:40:09  jak
 % Added use of the rfft and use of a sigmoidal nonlinearity. -jak
 %
