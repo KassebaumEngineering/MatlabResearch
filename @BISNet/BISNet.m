@@ -6,7 +6,7 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 %
 % Description:
 %
-% $Id: BISNet.m,v 1.1 2000/03/15 10:23:46 jak Exp $
+% $Id: BISNet.m,v 1.2 2000/03/15 10:54:34 jak Exp $
 %
     if ~isempty( varargin )
         classify = varargin{1};
@@ -40,6 +40,21 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 	% To determine the centers, walk the qtree elements
 	% and perform statistics on the leaves in those trees.
 	%
+	node = getFirstChild( qtree );
+	i = 1;
+	while ( ~isempty( node ) )
+	    hidden[i] = getBISstats( node );
+		node = getNextSibling( node );
+    end
+	
+	%
+	% Now, from the calculated centers and std devs, we 
+	% calculate the actual hidden weights using the
+	% unit vector of the center and a scale determined by
+	% the spread of the function.  
+	%
+	% TBD <=========================================
+	%
 
 % endfunction BISNet
 
@@ -47,6 +62,9 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 % History:
 % 
 % $Log: BISNet.m,v $
+% Revision 1.2  2000/03/15 10:54:34  jak
+% More changes to get closer to a working BISNET. -jak
+%
 % Revision 1.1  2000/03/15 10:23:46  jak
 % Working on a network to take advantage of the new mechanism. -jak
 %
