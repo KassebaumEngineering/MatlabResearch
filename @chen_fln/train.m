@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.2 1997/11/07 05:39:16 jak Exp $
+% $Id: train.m,v 1.3 1997/11/08 04:37:25 jak Exp $
 %
 
   % ---------------------------------------
@@ -199,8 +199,8 @@ function p = train(p, I_samples, O_samples, varargin)
       % Form Convergence Criterion
       %
         SECprev = SEC;
-        SEC = 0.9 * DataCnt * log( sse ) ...
-              + (1.0 - 0.9) * ParamCnt * log( DataCnt );
+        SEC = 0.5 * DataCnt * log( sse ) ...
+              + (1.0 - 0.5) * ParamCnt * log( DataCnt );
               
         fprintf( 1, '%d nodes: SEC = %f\n', hidden_units, SEC );
         
@@ -219,6 +219,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.3  1997/11/08 04:37:25  jak
+% Fixed a bug in the SEC calculation!. -jak
+%
 % Revision 1.2  1997/11/07 05:39:16  jak
 % Major Changes - now works with svd, qr, and standard lu.
 % Also uses the SEC to stop iterative training. -jak
