@@ -14,7 +14,7 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 % Each input (Desired and Actual) is of the form 
 % 'samples' x 'output classes'.
 %
-% $Id: conf.m,v 1.2 1997/11/18 16:49:51 jak Exp $
+% $Id: conf.m,v 1.3 1997/11/25 18:25:16 jak Exp $
 %
 % 
     err = Desired - Actual;
@@ -23,7 +23,7 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
     
     cmat = zeros(classes, classes);
     for s=1:samples
-        from = 0;
+        from = 1;
         to = from;
         for c=1:classes
             if -1 == err(s,c)
@@ -34,7 +34,7 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
                 from = c;
             end
             
-            if 1 == Desired(s,c)
+            if 0 ~= Desired(s,c)
                 d = c;
             end
         end
@@ -59,13 +59,20 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
             pc(1, i) = (correct(1,i) / samples_per_class(i)) * 100 ;
         end
     end
-    tpc = (sum( correct ) / sum( samples_per_class )) * 100;
+    if 0 == sum( samples_per_class )
+        tpc = 100.0;
+    else
+        tpc = (sum( correct ) / sum( samples_per_class )) * 100;
+    end
 
 %endfunction
 
 % --------------------------------
 % History:
 % $Log: conf.m,v $
+% Revision 1.3  1997/11/25 18:25:16  jak
+% A fix for a bug - can't remember what. -jak
+%
 % Revision 1.2  1997/11/18 16:49:51  jak
 % Fixing bugs - still not ready for prime time though. -jak
 %
