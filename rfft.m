@@ -11,7 +11,7 @@ function y=rfft(x)
 %
 % Contributed by Prof. Okan Ersoy, Purdue University
 %
-%  $Id: rfft.m,v 1.1 1997/10/28 18:38:36 jak Exp $
+%  $Id: rfft.m,v 1.2 1997/12/02 18:22:22 jak Exp $
 %
 
     i=sqrt(-1);
@@ -54,13 +54,21 @@ function y=rfft(x)
     y(1,l4)=r1+i1;
     y(n1,l4)=r1-i1;
 
-    if l==1 
-        y=y';
-    end
+
+% Removed by Prof. Ersoy - 12/1/97
+% ---
+%    if l==1 
+%        y=y';
+%    end
+% ---
+
 
 % History:
 % $Log: rfft.m,v $
-% Revision 1.1  1997/10/28 18:38:36  jak
-% Initial revision
+% Revision 1.2  1997/12/02 18:22:22  jak
+% Pshnn - experiments. All others a bug fix and code additions. -jak
+%
+% Revision 1.1.1.1  1997/10/28 18:38:36  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

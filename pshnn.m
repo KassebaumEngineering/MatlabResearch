@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.12 1997/11/29 21:10:06 jak Exp $
+% $Id: pshnn.m,v 1.13 1997/12/02 18:22:20 jak Exp $
 %
 %*****************************************************
 %
@@ -30,10 +30,10 @@
 %
 % Build the 1st N-unit and evaluate it.
 %
-%t1 = cputime;
-%  rfft = rfft_fln( inputsamples, outputsamples );
-%t2 = cputime;
-%t2 - t1
+t1 = cputime;
+  net = rfft_fln( inputsamples, outputsamples );
+t2 = cputime;
+t2 - t1
 %  chenn = chen_fln( inputsamples, outputsamples );
 %t3 = cputime;
 %t3 - t2
@@ -46,7 +46,7 @@
 
 %  net = pns_hnn( inputsamples, outputsamples );
   
-  net = jaknet( inputsamples, outputsamples, 50 );
+%  net = jaknet( inputsamples, outputsamples, 50 );
   
 %  net = consensus( inputsamples, outputsamples, 10 );
   [ Yc, Y ] = eval( net, inputsamples );
@@ -79,6 +79,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.13  1997/12/02 18:22:20  jak
+% Pshnn - experiments. All others a bug fix and code additions. -jak
+%
 % Revision 1.12  1997/11/29 21:10:06  jak
 % Testing modifications - inconsequential. -jak
 %
