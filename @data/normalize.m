@@ -9,7 +9,7 @@ function p = normalize( p, rangeMin, rangeMax )
 % The default rangeMin and rangeMax are 0 and
 % 1 respectively.
 %
-% $Id: normalize.m,v 1.1 1997/10/28 18:38:37 jak Exp $
+% $Id: normalize.m,v 1.1.1.1 1997/10/28 18:38:37 jak Exp $
 %
 
   MIN = 1;
@@ -42,7 +42,7 @@ function p = normalize( p, rangeMin, rangeMax )
 % History:
 % 
 % $Log: normalize.m,v $
-% Revision 1.1  1997/10/28 18:38:37  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:37  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

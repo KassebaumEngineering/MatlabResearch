@@ -8,7 +8,7 @@ function q = getAllData( p )
 % instance containing all the data in the
 % collection.
 %
-% $Id: getAllData.m,v 1.1 1997/10/28 18:38:44 jak Exp $
+% $Id: getAllData.m,v 1.1.1.1 1997/10/28 18:38:44 jak Exp $
 %
 
     samples = 0;
@@ -40,7 +40,7 @@ function q = getAllData( p )
 % History:
 % 
 % $Log: getAllData.m,v $
-% Revision 1.1  1997/10/28 18:38:44  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:44  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -11,7 +11,7 @@ function p = perceptron(inputs, hidden_units, outputs, I_samples)
 %     I_samples - are provided (optional argument), then the min
 %     and max are used to adjust the Nguyen-Widrow values.
 %
-% $Id: perceptron.m,v 1.1 1997/10/28 18:38:44 jak Exp $
+% $Id: perceptron.m,v 1.1.1.1 1997/10/28 18:38:44 jak Exp $
 
   if nargin == 0 || nargin == 1 || nargin == 2
       fprintf (2, 'perceptron() must be passed at least three arguments!');
@@ -105,7 +105,7 @@ function validate( inputs, I_samples )
 % ****************************************
 % History:
 % $Log: perceptron.m,v $
-% Revision 1.1  1997/10/28 18:38:44  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:44  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

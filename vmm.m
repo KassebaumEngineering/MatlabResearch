@@ -7,7 +7,7 @@ function z=vmm(x,y)
 %
 % Contributed by Prof. Okan Ersoy, Purdue University
 %
-%  $Id: vmm.m,v 1.1 1997/10/28 18:38:36 jak Exp $
+%  $Id: vmm.m,v 1.1.1.1 1997/10/28 18:38:36 jak Exp $
 %
 
     [m,n]=size(y); 
@@ -20,7 +20,7 @@ function z=vmm(x,y)
 
 % History:
 % $Log: vmm.m,v $
-% Revision 1.1  1997/10/28 18:38:36  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:36  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -7,7 +7,7 @@ function aCollection = getTestingSamples( p )
 % Description: Return a collection of iodata  
 % Testing Samples from the Colorado Data Set.
 %
-% $Id: getTestingSamples.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: getTestingSamples.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 
   aCollection = p.testing;
@@ -18,7 +18,7 @@ function aCollection = getTestingSamples( p )
 % History:
 % 
 % $Log: getTestingSamples.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -6,7 +6,7 @@ function [Imat, Omat] = getSamplePair( p, sampleno )
 %
 % Description:
 %
-% $Id: getSamplePair.m,v 1.1 1997/10/28 18:38:39 jak Exp $
+% $Id: getSamplePair.m,v 1.1.1.1 1997/10/28 18:38:39 jak Exp $
 %
 
   Imat = getInputSample( p, sampleno );
@@ -18,7 +18,7 @@ function [Imat, Omat] = getSamplePair( p, sampleno )
 % History:
 % 
 % $Log: getSamplePair.m,v $
-% Revision 1.1  1997/10/28 18:38:39  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:39  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

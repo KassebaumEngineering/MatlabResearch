@@ -6,7 +6,7 @@ function aSize = getSampleSize( p )
 %
 % Description: Get the number of samples in the data set.
 %
-% $Id: getSampleSize.m,v 1.1 1997/10/28 18:38:40 jak Exp $
+% $Id: getSampleSize.m,v 1.1.1.1 1997/10/28 18:38:40 jak Exp $
 %
 
   %aSize = getSampleSize( p.data );
@@ -18,7 +18,7 @@ function aSize = getSampleSize( p )
 % History:
 % 
 % $Log: getSampleSize.m,v $
-% Revision 1.1  1997/10/28 18:38:40  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:40  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

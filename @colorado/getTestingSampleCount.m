@@ -7,7 +7,7 @@ function cnt = getTestingSampleCount( p )
 % Description: Return the number of samples in the
 % testing portion of the Colorado Data Set.
 %
-% $Id: getTestingSampleCount.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: getTestingSampleCount.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 
   cnt = p.testingCases;
@@ -18,7 +18,7 @@ function cnt = getTestingSampleCount( p )
 % History:
 % 
 % $Log: getTestingSampleCount.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

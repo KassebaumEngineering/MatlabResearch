@@ -10,7 +10,7 @@ function p = addSample( p, aSampleInput, aSampleOutput )
 % the already present data, or be the 
 % first piece of data presented.
 %
-% $Id: addSample.m,v 1.1 1997/10/28 18:38:39 jak Exp $
+% $Id: addSample.m,v 1.1.1.1 1997/10/28 18:38:39 jak Exp $
 %
 
   [isamples, inputs ] = size ( aSampleInput  );
@@ -50,7 +50,7 @@ function p = addSample( p, aSampleInput, aSampleOutput )
 % History:
 % 
 % $Log: addSample.m,v $
-% Revision 1.1  1997/10/28 18:38:39  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:39  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -11,7 +11,7 @@ function p = addInput( p, signal )
 % to the other inputs already in the data set. 
 % The signal must have dimensions samples x inputs
 %
-% $Id: addInput.m,v 1.1 1997/10/28 18:38:37 jak Exp $
+% $Id: addInput.m,v 1.1.1.1 1997/10/28 18:38:37 jak Exp $
 %
 
   [samples, inputs] = size ( signal );
@@ -33,7 +33,7 @@ function p = addInput( p, signal )
 % History:
 % 
 % $Log: addInput.m,v $
-% Revision 1.1  1997/10/28 18:38:37  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:37  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

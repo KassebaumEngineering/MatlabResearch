@@ -8,7 +8,7 @@ function aCollection = getTrainingSamples( p )
 % iodata Training Samples from the Colorado 
 % Data Set.
 %
-% $Id: getTrainingSamples.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: getTrainingSamples.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 
   aCollection = p.training;
@@ -19,7 +19,7 @@ function aCollection = getTrainingSamples( p )
 % History:
 % 
 % $Log: getTrainingSamples.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

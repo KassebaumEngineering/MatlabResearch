@@ -11,7 +11,7 @@ function p = addOutput( p, signal )
 % to the other inputs and outputs already in the data set. 
 % The signal must have dimensions samples x new outputs
 %
-% $Id: addOutput.m,v 1.1 1997/10/28 18:38:39 jak Exp $
+% $Id: addOutput.m,v 1.1.1.1 1997/10/28 18:38:39 jak Exp $
 %
 
   [samples, outputs] = size ( signal );
@@ -35,7 +35,7 @@ function p = addOutput( p, signal )
 % History:
 % 
 % $Log: addOutput.m,v $
-% Revision 1.1  1997/10/28 18:38:39  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:39  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

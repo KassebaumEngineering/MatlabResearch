@@ -10,7 +10,7 @@ function p = chen_fln(I_samples, hidden_units, varargin)
 %     random Nguyen-Widrow values.  The min and max are used to 
 %     adjust the Nguyen-Widrow values.
 %
-% $Id: chen_fln.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: chen_fln.m,v 1.1.1.1 1997/10/28 18:38:43 jak Exp $
 %
  
     [ samples, inputs ] = size( I_samples );
@@ -77,7 +77,7 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
 % ****************************************
 % History:
 % $Log: chen_fln.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

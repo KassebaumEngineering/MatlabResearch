@@ -7,7 +7,7 @@ function p = display( p )
 % Description: Calls display on each of the 
 % data sets in the collection.
 %
-% $Id: display.m,v 1.1 1997/10/28 18:38:44 jak Exp $
+% $Id: display.m,v 1.1.1.1 1997/10/28 18:38:44 jak Exp $
 %
 
   fprintf( 1, '%s - data collection:\n', p.label );
@@ -21,7 +21,7 @@ function p = display( p )
 % History:
 % 
 % $Log: display.m,v $
-% Revision 1.1  1997/10/28 18:38:44  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:44  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

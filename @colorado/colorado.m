@@ -11,7 +11,7 @@ function p = colorado
 % Each collection consists of 10-class 'iodata' with 7
 % inputs and 10 outputs. 
 %
-% $Id: colorado.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: colorado.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 % Uses private script Files:
 %      trn_inm,  trn_cls.m   - for training data
@@ -240,7 +240,7 @@ function p = colorado
 % History:
 % 
 % $Log: colorado.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

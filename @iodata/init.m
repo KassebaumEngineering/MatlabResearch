@@ -11,7 +11,7 @@ function p = init( p, inputDataMat, outputDataMat )
 % samples x variables.  Also, data matrices must be 2 
 % dimensional.
 %
-% $Id: init.m,v 1.1 1997/10/28 18:38:38 jak Exp $
+% $Id: init.m,v 1.1.1.1 1997/10/28 18:38:38 jak Exp $
 %
 
   %init( p.data, inputDataMat );
@@ -41,7 +41,7 @@ function p = init( p, inputDataMat, outputDataMat )
 % History:
 % 
 % $Log: init.m,v $
-% Revision 1.1  1997/10/28 18:38:38  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:38  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

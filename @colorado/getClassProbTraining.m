@@ -7,7 +7,7 @@ function anArray = getClassProbTraining( p )
 % Description: Return the array of class membership
 % probabilities as defined by the members of the training set.
 %
-% $Id: getClassProbTraining.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: getClassProbTraining.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 
   anArray = p.probabilityOfTrainingClass;
@@ -18,7 +18,7 @@ function anArray = getClassProbTraining( p )
 % History:
 % 
 % $Log: getClassProbTraining.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

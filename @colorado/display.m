@@ -6,7 +6,7 @@ function p = display( p )
 %
 % Description: Display the Colorado Data Set.
 %
-% $Id: display.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: display.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 
   fprintf( 1, 'Colorado Data Set\n');
@@ -24,7 +24,7 @@ function p = display( p )
 % History:
 % 
 % $Log: display.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

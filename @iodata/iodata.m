@@ -12,7 +12,7 @@ function p = iodata( label, inputSamples, outputSamples, varargin )
 % is a unique sample without indexed parameterized
 % relationship to the other samples
 %
-% $Id: iodata.m,v 1.1 1997/10/28 18:38:38 jak Exp $
+% $Id: iodata.m,v 1.1.1.1 1997/10/28 18:38:38 jak Exp $
 %
 
   if 2 ~= ndims( outputSamples )
@@ -75,7 +75,7 @@ function p = iodata( label, inputSamples, outputSamples, varargin )
 % History:
 % 
 % $Log: iodata.m,v $
-% Revision 1.1  1997/10/28 18:38:38  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:38  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

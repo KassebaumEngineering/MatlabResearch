@@ -9,7 +9,7 @@ function q = hasIoData( p, arg )
 % only 'data' and no 'iodata'.  If no data
 % is contained in the collection yet, -1 is returned.
 %
-% $Id: hasIoData.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: hasIoData.m,v 1.1.1.1 1997/10/28 18:38:43 jak Exp $
 %
 
    q = p.hasIoData; 
@@ -20,7 +20,7 @@ function q = hasIoData( p, arg )
 % History:
 % 
 % $Log: hasIoData.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -7,7 +7,7 @@ function q = getSampleSizes( p )
 % Description: Returns a row vector of sample
 % sizes for the members of the collection.
 %
-% $Id: getSampleSizes.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: getSampleSizes.m,v 1.1.1.1 1997/10/28 18:38:43 jak Exp $
 %
 
     q= [];
@@ -21,7 +21,7 @@ function q = getSampleSizes( p )
 % History:
 % 
 % $Log: getSampleSizes.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

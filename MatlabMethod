@@ -3,7 +3,7 @@
 #-----------------------------------------------------
 # MatlabMethod
 #
-# $Id: MatlabMethod,v 1.1 1997/10/28 18:38:36 jak Exp $
+# $Id: MatlabMethod,v 1.1.1.1 1997/10/28 18:38:36 jak Exp $
 #
 # A Bourne-Shell Script to Generate MATLAB-Style 
 # Class Method Files with CVS and RCS variables 
@@ -56,7 +56,7 @@ end #foreach
 #-----------------------------------------------------
 # History:
 # $Log: MatlabMethod,v $
-# Revision 1.1  1997/10/28 18:38:36  jak
-# Initial revision
+# Revision 1.1.1.1  1997/10/28 18:38:36  jak
+# Initial Import of Matlab Research tools and classes. -jak
 #
 #

@@ -8,7 +8,7 @@ function p = restore( p, label )
 % the given label and return it in place
 % of p.
 %
-% $Id: restore.m,v 1.1 1997/10/28 18:38:39 jak Exp $
+% $Id: restore.m,v 1.1.1.1 1997/10/28 18:38:39 jak Exp $
 %
 
   filename = ['iodata', label, '.mat' ];
@@ -24,7 +24,7 @@ function p = restore( p, label )
 % History:
 % 
 % $Log: restore.m,v $
-% Revision 1.1  1997/10/28 18:38:39  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:39  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

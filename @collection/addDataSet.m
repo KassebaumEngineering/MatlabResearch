@@ -10,7 +10,7 @@ function p = addDataSet( p, varargin )
 % number of inputs and outputs is fixed for the 
 % collection.
 %
-% $Id: addDataSet.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: addDataSet.m,v 1.1.1.1 1997/10/28 18:38:43 jak Exp $
 %
 
   
@@ -41,7 +41,7 @@ function p = addDataSet( p, varargin )
 % History:
 % 
 % $Log: addDataSet.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

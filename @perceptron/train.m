@@ -19,7 +19,7 @@ function p = train(p, I_samples, O_samples, epochs)
 %     O_samples -> samples x outputs
 %     epochs    -> a positive integer (optional)
 %
-% $Id: train.m,v 1.1 1997/10/28 18:38:44 jak Exp $
+% $Id: train.m,v 1.1.1.1 1997/10/28 18:38:44 jak Exp $
 %
 
     % ---------------------------------------
@@ -61,8 +61,8 @@ function p = train(p, I_samples, O_samples, epochs)
 % ****************************************
 % History:
 % $Log: train.m,v $
-% Revision 1.1  1997/10/28 18:38:44  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:44  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %
 

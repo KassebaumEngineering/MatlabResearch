@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.1 1997/10/28 18:38:36 jak Exp $
+% $Id: pshnn.m,v 1.1.1.1 1997/10/28 18:38:36 jak Exp $
 %
 %*****************************************************
 %
@@ -25,7 +25,7 @@ net = chen_fln( inputsamples, 100, outputsamples );
 % History:
 % 
 % $Log: pshnn.m,v $
-% Revision 1.1  1997/10/28 18:38:36  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:36  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -14,7 +14,7 @@ function p = train(p, I_samples, O_samples)
 %     I_samples -> samples x inputs
 %     O_samples -> samples x outputs
 %
-% $Id: train.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: train.m,v 1.1.1.1 1997/10/28 18:38:43 jak Exp $
 %
 
     % ---------------------------------------
@@ -63,7 +63,7 @@ function p = train(p, I_samples, O_samples)
 % ****************************************
 % History:
 % $Log: train.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

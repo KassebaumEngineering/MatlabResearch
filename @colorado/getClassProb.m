@@ -8,7 +8,7 @@ function anArray = getClassProb( p )
 % probabilities as defined by all training and testing 
 % data in the Colorado Data Set.
 %
-% $Id: getClassProb.m,v 1.1 1997/10/28 18:38:41 jak Exp $
+% $Id: getClassProb.m,v 1.1.1.1 1997/10/28 18:38:41 jak Exp $
 %
 
   anArray = p.probabilityOfClass;
@@ -19,7 +19,7 @@ function anArray = getClassProb( p )
 % History:
 % 
 % $Log: getClassProb.m,v $
-% Revision 1.1  1997/10/28 18:38:41  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:41  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -6,7 +6,7 @@ function p = display( p )
 %
 % Description: Display iodata object info.
 %
-% $Id: display.m,v 1.1 1997/10/28 18:38:39 jak Exp $
+% $Id: display.m,v 1.1.1.1 1997/10/28 18:38:39 jak Exp $
 %
 
     fprintf( 1, ...
@@ -23,7 +23,7 @@ function p = display( p )
 % History:
 % 
 % $Log: display.m,v $
-% Revision 1.1  1997/10/28 18:38:39  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:39  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

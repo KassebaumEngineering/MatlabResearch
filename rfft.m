@@ -11,7 +11,7 @@ function y=rfft(x)
 %
 % Contributed by Prof. Okan Ersoy, Purdue University
 %
-%  $Id: rfft.m,v 1.1 1997/10/28 18:38:36 jak Exp $
+%  $Id: rfft.m,v 1.1.1.1 1997/10/28 18:38:36 jak Exp $
 %
 
     i=sqrt(-1);
@@ -60,7 +60,7 @@ function y=rfft(x)
 
 % History:
 % $Log: rfft.m,v $
-% Revision 1.1  1997/10/28 18:38:36  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:36  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

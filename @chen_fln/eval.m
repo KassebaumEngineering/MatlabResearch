@@ -10,7 +10,7 @@ function [Yc, Y] = eval(p, I_samples)
 %     p         -> a Perceptron Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: eval.m,v 1.1.1.1 1997/10/28 18:38:43 jak Exp $
 %
 
     % ---------------------------------------
@@ -48,7 +48,7 @@ function [Yc, Y] = eval(p, I_samples)
 % ****************************************
 % History:
 % $Log: eval.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -11,7 +11,7 @@ function p = data( label, inputSamples, varargin )
 % is a unique sample without indexed parameterized
 % relationship to the other samples.
 %
-% $Id: data.m,v 1.1 1997/10/28 18:38:37 jak Exp $
+% $Id: data.m,v 1.1.1.1 1997/10/28 18:38:37 jak Exp $
 %
 
   p.label = label;
@@ -42,7 +42,7 @@ function p = data( label, inputSamples, varargin )
 % History:
 % 
 % $Log: data.m,v $
-% Revision 1.1  1997/10/28 18:38:37  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:37  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

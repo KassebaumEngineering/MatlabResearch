@@ -3,7 +3,7 @@
 % Definition of testing samples class memberships 
 % for colorado data set.
 %
-% $Id: test_cls.m,v 1.1 1997/10/28 18:38:42 jak Exp $
+% $Id: test_cls.m,v 1.1.1.1 1997/10/28 18:38:42 jak Exp $
 %
 colorado_test_classes = [
 1 ;
@@ -842,8 +842,8 @@ colorado_test_classes = [
 % --------------------------------
 % History:
 % $Log: test_cls.m,v $
-% Revision 1.1  1997/10/28 18:38:42  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:42  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 % Revision 1.1.1.1  1997/09/27 18:57:14  jak
 % First commit of the colorado data set in matlab. -jak

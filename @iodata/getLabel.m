@@ -6,7 +6,7 @@ function aLabel = getLabel( p )
 %
 % Description: Get the label given for the data set.
 %
-% $Id: getLabel.m,v 1.1 1997/10/28 18:38:40 jak Exp $
+% $Id: getLabel.m,v 1.1.1.1 1997/10/28 18:38:40 jak Exp $
 %
 
   %aLabel = getLabel( p.data );
@@ -18,7 +18,7 @@ function aLabel = getLabel( p )
 % History:
 % 
 % $Log: getLabel.m,v $
-% Revision 1.1  1997/10/28 18:38:40  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:40  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

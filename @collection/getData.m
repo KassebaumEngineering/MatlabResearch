@@ -7,7 +7,7 @@ function q = getData( p, label )
 % Description: Get the data set with the
 % label given as argument.
 %
-% $Id: getData.m,v 1.1 1997/10/28 18:38:44 jak Exp $
+% $Id: getData.m,v 1.1.1.1 1997/10/28 18:38:44 jak Exp $
 %
 
   q = data( 'empty', [], []);
@@ -24,7 +24,7 @@ function q = getData( p, label )
 % History:
 % 
 % $Log: getData.m,v $
-% Revision 1.1  1997/10/28 18:38:44  jak
-% Initial revision
+% Revision 1.1.1.1  1997/10/28 18:38:44  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %
