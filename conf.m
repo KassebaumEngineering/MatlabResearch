@@ -14,7 +14,7 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 % Each input (Desired and Actual) is of the form 
 % 'samples' x 'output classes'.
 %
-% $Id: conf.m,v 1.2 1997/11/18 16:47:52 jak Exp $
+% $Id: conf.m,v 1.3 1997/11/25 18:24:28 jak Exp $
 %
 % 
     err = Desired - Actual;
@@ -23,7 +23,7 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
     
     cmat = zeros(classes, classes);
     for s=1:samples
-        from = 0;
+        from = 1;
         to = from;
         for c=1:classes
             if -1 == err(s,c)
@@ -59,13 +59,20 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
             pc(1, i) = (correct(1,i) / samples_per_class(i)) * 100 ;
         end
     end
-    tpc = (sum( correct ) / sum( samples_per_class )) * 100;
+    if 0 == sum( samples_per_class )
+        tpc = 100.0;
+    else
+        tpc = (sum( correct ) / sum( samples_per_class )) * 100;
+    end
 
 %endfunction
 
 % --------------------------------
 % History:
 % $Log: conf.m,v $
+% Revision 1.3  1997/11/25 18:24:28  jak
+% Small modifications for testing. -jak
+%
 % Revision 1.2  1997/11/18 16:47:52  jak
 % fixed a bug in conf, more additions for testing in pshnn. -jak
 %

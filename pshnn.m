@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.10 1997/11/18 16:47:53 jak Exp $
+% $Id: pshnn.m,v 1.11 1997/11/25 18:24:28 jak Exp $
 %
 %*****************************************************
 %
@@ -37,13 +37,16 @@
 %  chenn = chen_fln( inputsamples, outputsamples );
 %t3 = cputime;
 %t3 - t2
-  sop = sopnet( inputsamples, outputsamples );
+%  net = sopnet( inputsamples, outputsamples );
 %t4 = cputime;
 %t4 - t3
 
-   net = sop;
-%  net = pns_hnn( getTrainingSamples( myData ), 0.9 );
-%  net = consensus( inputsamples, outputsamples, 50, 23 );
+%   net = sop;
+%  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
+
+  net = pns_hnn( inputsamples, outputsamples );
+  
+%  net = consensus( inputsamples, outputsamples, 10 );
   [ Yc, Y ] = eval( net, inputsamples );
 
 %
@@ -74,6 +77,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.11  1997/11/25 18:24:28  jak
+% Small modifications for testing. -jak
+%
 % Revision 1.10  1997/11/18 16:47:53  jak
 % fixed a bug in conf, more additions for testing in pshnn. -jak
 %
