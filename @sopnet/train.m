@@ -13,14 +13,14 @@ function p = train(p, I_samples, O_samples, varargin)
 %     contains a min and max data value for each input
 %     of the I_samples data set.
 %
-%     p            -> a Perceptron Instance
+%     p            -> a sopnet Instance
 %     I_samples    -> samples x inputs
 %     O_samples    -> samples x outputs
 %     MinsAndMaxes -> inputs x 2 array of 
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.4 1997/11/25 18:26:15 jak Exp $
+% $Id: train.m,v 1.5 1997/11/29 21:11:07 jak Exp $
 %
 
   % ---------------------------------------
@@ -284,6 +284,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.5  1997/11/29 21:11:07  jak
+% Fixed some mis-references in the comments. -jak
+%
 % Revision 1.4  1997/11/25 18:26:15  jak
 % Added some useful features to improve classification performance. -jak
 %

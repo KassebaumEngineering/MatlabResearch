@@ -7,10 +7,10 @@ function [Yc, Y] = eval(p, I_samples)
 %     Eval evalutes the neural network 'p' using 
 %     the 'I_samples' data provided.
 %
-%     p         -> a Perceptron Instance
+%     p         -> a sopnet Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.2 1997/11/25 18:26:14 jak Exp $
+% $Id: eval.m,v 1.3 1997/11/29 21:11:06 jak Exp $
 %
 
     % ---------------------------------------
@@ -52,6 +52,9 @@ function [Yc, Y] = eval(p, I_samples)
 % ****************************************
 % History:
 % $Log: eval.m,v $
+% Revision 1.3  1997/11/29 21:11:06  jak
+% Fixed some mis-references in the comments. -jak
+%
 % Revision 1.2  1997/11/25 18:26:14  jak
 % Added some useful features to improve classification performance. -jak
 %
