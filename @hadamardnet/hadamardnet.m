@@ -1,14 +1,14 @@
 
-function p = jaknet( I_samples, O_samples, varargin )
-% jaknet - jaknet Class Constructor Method
+function p = hadamardnet( I_samples, O_samples, varargin )
+% hadamardnet - Class Constructor Method
 %
-%     p = jaknet( I_samples, O_samples )
+%     p = hadmardnet( I_samples, O_samples )
 %
-% Description: Jaknet creates a single layer perceptron
+% Description: HadamardNetcreates a single layer perceptron
 % structured network with tanh nonlinearities at the
 % outputs of the hidden layer.
 %
-% $Id: hadamardnet.m,v 1.1 1999/09/19 23:29:43 jak Exp $
+% $Id: hadamardnet.m,v 1.2 1999/09/19 23:35:53 jak Exp $
 %
     
     [  samples,  inputs ] = size( I_samples );
@@ -151,8 +151,11 @@ function [ W1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs, Ma
 % History:
 % 
 % $Log: hadamardnet.m,v $
-% Revision 1.1  1999/09/19 23:29:43  jak
-% Initial revision
+% Revision 1.2  1999/09/19 23:35:53  jak
+% Name change to make it not broke. -jak
+%
+% Revision 1.1.1.1  1999/09/19 23:29:43  jak
+% Re-checkin of original @jaknet - named changed to @hadamardnet for clarity. -jak
 %
 % Revision 1.2  1998/03/07 22:58:14  jak
 % I don't know .... hmmm. -jak
