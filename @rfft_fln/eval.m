@@ -11,7 +11,7 @@ function [Yc, Y] = eval( p, I_samples )
 %     I_samples -> samples x inputs
 %
 %
-% $Id: eval.m,v 1.5 1997/11/07 06:20:08 jak Exp $
+% $Id: eval.m,v 1.6 1997/11/08 07:10:58 jak Exp $
 %
 
     % ---------------------------------------
@@ -41,8 +41,8 @@ function [Yc, Y] = eval( p, I_samples )
     %
     Y = p.Wo * [ ...
                   tansig( rfft( Inputs' )' ) ...
-                  ,I_samples ...
-                  ,ones( samples, 1) ...
+%                  ,I_samples ...
+%                  ,ones( samples, 1) ...
                ]' ;
 
     % ---------------------------------------
@@ -68,6 +68,9 @@ function [Yc, Y] = eval( p, I_samples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.6  1997/11/08 07:10:58  jak
+% Corrections for truth in SEC calculations! Improved performance. -jak
+%
 % Revision 1.5  1997/11/07 06:20:08  jak
 % Changed calling conventions, cleaned up stuff, ready for iteration. -jak
 %

@@ -14,7 +14,7 @@ function p = train( p, I_samples, O_samples )
 %     I_samples -> samples x inputs
 %     O_samples -> samples x outputs
 %
-% $Id: train.m,v 1.5 1997/11/07 06:20:09 jak Exp $
+% $Id: train.m,v 1.6 1997/11/08 07:10:59 jak Exp $
 %
 
     % ---------------------------------------
@@ -57,12 +57,16 @@ function p = train( p, I_samples, O_samples )
 
     H = [ ...
           tansig( rfft( Inputs' )' ) ...
-          ,I_samples ...
-          ,ones( isamples, 1) ...
+%          ,I_samples ...
+%          ,ones( isamples, 1) ...
         ];
 
     HtH = H' * H;
     HtB = H' * O_samples ;
+    
+  % ---------------------------------------
+  % By Singular-Value Decomposition! (Works)
+  %    
     [U S V] = svd( HtH );
     [d1,d2] = size( S );
     Sinv = zeros( d1, d1 );
@@ -75,12 +79,142 @@ function p = train( p, I_samples, O_samples )
     end
     p.Wo = ((V * Sinv) * (U' * HtB))';
 
+  % ---------------------------------------
+  % QR Method: (Works)
+  %
+%    [Q,R] = qr( HtH );
+%    p.Wo = (HtB' * Q) / R';
+
+ 
+  % ---------------------------------------
+  % Standard Method: (Works) 
+  %
+%    p.Wo = HtB' / HtH ;
+
+  % ---------------------------------------
+  % Calculate Sum Square Error
+  %
+    Y = (p.Wo * H');
+    err =  Y - O_samples';
+    sse = 0.0;
+    for i=1:outputs
+        sse = sse + err(i, :) * err( i, : )';
+    end
+
+  % ---------------------------------------
+  % Calculate Structure and Data Size Penalty Terms
+  %
+%    ParamCnt = p.outputs * (p.hidden_units + p.inputs + 1); 
+    ParamCnt = p.outputs * p.hidden_units; 
+    DataCnt  = isamples * p.inputs + osamples * p.outputs; 
+
+  % ---------------------------------------
+  % Form Convergence Criterion
+  %
+    SEC = DataCnt * log( sse ) ...
+              + ParamCnt * log( DataCnt );
+    
+    fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', p.hidden_units, SEC, sse );
+    
+    if 1 == p.freezeHiddenLayer
+        return;
+    end
+    
+    nextPower = log2( p.hidden_units ) + 1;
+    quit = 0;
+    while ( 1 ~= quit )
+        % ---------------------------------------
+        % Augment Net Inputs (pad with zeros if necessary).
+        %
+        % TEST FOR hidden_units A POWER OF 2 !!
+        % TEST FOR hidden_units SMALLER THAN p.inputs !!
+        hidden_units = 2 ^ nextPower;
+        augmentation = zeros( isamples, (hidden_units - p.inputs) );
+        Inputs       = [ I_samples, augmentation ];
+
+        % ---------------------------------------
+        % Calculate Enhancement Functions of Inputs.
+        %
+
+        H = [ ...
+                 tansig( rfft( Inputs' )' ) ...
+%                ,I_samples ...
+%                ,ones( isamples, 1) ...
+            ];
+
+        HtH = H' * H;
+        HtB = H' * O_samples ;
+
+      % ---------------------------------------
+      % Solve for new Output Layer Weights
+      % (Standard Method)
+      %
+%        Wo = HtB' / HtH ;
+        
+      % ---------------------------------------
+      % By Singular-Value Decomposition! (Works)
+      %    
+        [U, S, V] = svd( HtH );
+        [d1,d2] = size( S );
+        Sinv = sparse( d1, d1 );
+        for i=1: d1
+            if (S(i,i) < 10^-20 * S(1,1))
+                Sinv(i,i) = 0.0;
+            else
+                Sinv(i,i) = 1.0 / S(i,i);
+            end
+        end
+        Wo = ((V * Sinv) * (U' * HtB))';
+
+      % ---------------------------------------
+      % Calculate Sum Square Error
+      %
+        Y = (Wo * H');
+        err =  Y - O_samples';
+        newsse = 0.0;
+        for i=1:outputs
+            newsse = newsse + err(i, :) * err(i, :)' ;
+        end
+        
+      % ---------------------------------------
+      % Calculate Structure and Data Size Penalty Terms
+      %
+%        ParamCnt = p.outputs * (p.hidden_units + p.inputs + 1); 
+        ParamCnt = p.outputs * p.hidden_units; 
+        DataCnt  = isamples * p.inputs + osamples * p.outputs; 
+        
+      % ---------------------------------------
+      % Form Convergence Criterion
+      %
+        newSEC = DataCnt * log( newsse ) ...
+                 +  ParamCnt * log( DataCnt );
+              
+        fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', ...
+                 hidden_units, newSEC , newsse);
+        
+        if ( newSEC < SEC )
+            SEC = newSEC;
+            sse = newsse;
+            p.hidden_units = hidden_units;
+            p.Wo = Wo;
+            quit = 0;
+            nextPower = nextPower + 1;
+        else
+            fprintf( 1, 'DONE! %d nodes: SEC = %f, sse = %f\n', ...
+                p.hidden_units, SEC, sse );
+            quit = 1;            
+        end
+     end
+
 % endfunction train
 
 %*****************************************************
 % History:
 % 
 % $Log: train.m,v $
+% Revision 1.6  1997/11/08 07:10:59  jak
+% Corrections for truth in SEC calculations! Improved performance. -jak
+%
 % Revision 1.5  1997/11/07 06:20:09  jak
 % Changed calling conventions, cleaned up stuff, ready for iteration. -jak
 %

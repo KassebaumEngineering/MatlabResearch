@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.1 1997/11/08 04:37:55 jak Exp $
+% $Id: train.m,v 1.2 1997/11/08 07:11:24 jak Exp $
 %
 
   % ---------------------------------------
@@ -116,7 +116,7 @@ function p = train(p, I_samples, O_samples, varargin)
   % ---------------------------------------
   % Calculate Structure and Data Size Penalty Terms
   %
-    ParamCnt = p.outputs * p.hidden_units; % + ((p.hidden_units) * p.inputs) 
+    ParamCnt = p.outputs * p.hidden_units +  p.hidden_units * p.inputs; 
     DataCnt  = isamples * p.inputs + osamples * p.outputs; 
 
   % ---------------------------------------
@@ -184,27 +184,28 @@ function p = train(p, I_samples, O_samples, varargin)
       %
         Y = (Wo * augH');
         err =  Y - O_samples';
-        sse = 0.0;
+        newsse = 0.0;
         for i=1:outputs
-            sse = sse + err(i, :) * err(i, :)' ;
+            newsse = newsse + err(i, :) * err(i, :)' ;
         end
         
       % ---------------------------------------
       % Calculate Structure and Data Size Penalty Terms
       %
-        ParamCnt =  p.outputs * hidden_units; % + (hidden_units * p.inputs);
+        ParamCnt =  p.outputs * hidden_units +  hidden_units * p.inputs;
         DataCnt  = isamples * p.inputs + osamples * p.outputs; 
         
       % ---------------------------------------
       % Form Convergence Criterion
       %
-        newSEC = DataCnt * log( sse ) ...
+        newSEC = DataCnt * log( newsse ) ...
                  +  ParamCnt * log( DataCnt );
               
-        fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', hidden_units, newSEC , sse);
+        fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', hidden_units, newSEC , newsse);
         
         if ( newSEC < SEC )
             SEC = newSEC;
+            sse = newsse;
             HtH = augHtH;
             HtB = augHtB;
             H   = augH;
@@ -215,7 +216,8 @@ function p = train(p, I_samples, O_samples, varargin)
             iterate = 0;
             quit = 0;
         elseif (10 < iterate) & (AugmentCnt == 1)
-            fprintf( 1, 'DONE! %d nodes: SEC = %f\n', p.hidden_units, SEC );
+            fprintf( 1, 'DONE! %d nodes: SEC = %f, sse = %f\n', ...
+                p.hidden_units, SEC, sse );
             quit = 1;            
         elseif (10 < iterate)
             iterate = 0;
@@ -232,6 +234,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.2  1997/11/08 07:11:24  jak
+% Corrections for truth in SEC calculations! Improved performance. -jak
+%
 % Revision 1.1  1997/11/08 04:37:55  jak
 % First Turn in of Self-Organizing Percepton Network! - jak
 %
