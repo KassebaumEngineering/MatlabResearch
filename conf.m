@@ -14,7 +14,7 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 % Each input (Desired and Actual) is of the form 
 % 'samples' x 'output classes'.
 %
-% $Id: conf.m,v 1.1 1997/10/29 00:10:17 jak Exp $
+% $Id: conf.m,v 1.2 1997/11/18 16:47:52 jak Exp $
 %
 % 
     err = Desired - Actual;
@@ -49,11 +49,15 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 
     correct = zeros(1,classes);
     for i=1:classes
-    correct(1, i) = cmat(i,i);
+        correct(1, i) = cmat(i,i);
     end
     pc = zeros(1,classes);
     for i=1:classes
-    pc(1, i) = (correct(1,i) / samples_per_class(i)) * 100 ;
+        if  0 == samples_per_class(i)
+            pc(1, i) = 100.0 ;
+        else
+            pc(1, i) = (correct(1,i) / samples_per_class(i)) * 100 ;
+        end
     end
     tpc = (sum( correct ) / sum( samples_per_class )) * 100;
 
@@ -62,6 +66,9 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 % --------------------------------
 % History:
 % $Log: conf.m,v $
+% Revision 1.2  1997/11/18 16:47:52  jak
+% fixed a bug in conf, more additions for testing in pshnn. -jak
+%
 % Revision 1.1  1997/10/29 00:10:17  jak
 % Added more to Pshnn and added confusion matrix function. -jak
 %

@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.9 1997/11/08 07:10:08 jak Exp $
+% $Id: pshnn.m,v 1.10 1997/11/18 16:47:53 jak Exp $
 %
 %*****************************************************
 %
@@ -32,40 +32,18 @@
 %
 %t1 = cputime;
 %  rfft = rfft_fln( inputsamples, outputsamples );
-t2 = cputime;
+%t2 = cputime;
 %t2 - t1
-  chenn = chen_fln( inputsamples, outputsamples );
-t3 = cputime;
-t3 - t2
+%  chenn = chen_fln( inputsamples, outputsamples );
+%t3 = cputime;
+%t3 - t2
   sop = sopnet( inputsamples, outputsamples );
-t4 = cputime;
-t4 - t3
-
-   net = chenn;
-%  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
-  [ Yc, Y ] = eval( net, inputsamples );
-
-%
-% Get Class by Class Probability of Error
-%
-  [cmat, pc, tpc] = conf( outputsamples, Yc );
-  pc
-  tpc
-  cmat
-  
-%
-% Test The Network
-%
-  alltestingsamples = getAllData( getTestingSamples( myData ));
-  [ isamples, osamples ] = getSamplePair( alltestingsamples, ':' );
-  [ Yc, Y ] = eval( net, isamples );
-  [cmat, pc, tpc] = conf( osamples, Yc );
-  pc
-  tpc
-  cmat
+%t4 = cputime;
+%t4 - t3
 
    net = sop;
-%  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
+%  net = pns_hnn( getTrainingSamples( myData ), 0.9 );
+%  net = consensus( inputsamples, outputsamples, 50, 23 );
   [ Yc, Y ] = eval( net, inputsamples );
 
 %
@@ -96,6 +74,9 @@ t4 - t3
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.10  1997/11/18 16:47:53  jak
+% fixed a bug in conf, more additions for testing in pshnn. -jak
+%
 % Revision 1.9  1997/11/08 07:10:08  jak
 % Added timing and comparisons. -jak
 %
