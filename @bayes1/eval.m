@@ -10,7 +10,7 @@ function [Yc, Y] = eval(p, I_samples)
 %     p         -> a bayes1 Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.1 1998/03/07 22:57:36 jak Exp $
+% $Id: eval.m,v 1.2 1998/03/08 07:18:21 jak Exp $
 %
 
     % ---------------------------------------
@@ -28,6 +28,10 @@ function [Yc, Y] = eval(p, I_samples)
     %
     Y = p.Wo * [ ones( samples, 1 ), tansig( p.Wh * I_samples', p.Bh)' ]';
 
+    % ---------------------------------------
+    % Calculate Net Output.
+    %
+%    Y = purelin(p.Wo(:, 1:p.hidden_units) * tansig( p.Wh * I_samples', p.Bh), p.Wo(:, p.hidden_units+1));
 
     % ---------------------------------------
     % Assign Outputs to Classes
@@ -52,6 +56,9 @@ function [Yc, Y] = eval(p, I_samples)
 % ****************************************
 % History:
 % $Log: eval.m,v $
+% Revision 1.2  1998/03/08 07:18:21  jak
+% Well .... it works now ... thanks to God.  -jak
+%
 % Revision 1.1  1998/03/07 22:57:36  jak
 % Added new test class. -jak
 %

@@ -1,8 +1,8 @@
 
-function p = bayes1(I_samples, O_samples, varargin )
+function p = bayes1( I_samples, O_samples, hidden_units )
 % bayes1 - Constructor for bayes1 Class
 %
-%     p = bayes1(I_samples, O_samples [, hidden_units, CvgOff] )
+%     p = bayes1(I_samples, O_samples, hidden_units )
 %     
 %     Creates a neural network with an  architecture
 %     which supports the I_samples and O_Samples which were
@@ -17,20 +17,31 @@ function p = bayes1(I_samples, O_samples, varargin )
 %     using random Nguyen-Widrow values.  The min and max are  
 %     used to adjust the Nguyen-Widrow values.
 %
-% $Id: bayes1.m,v 1.1 1998/03/08 00:23:37 jak Exp $
+% $Id: bayes1.m,v 1.2 1998/03/08 07:18:19 jak Exp $
 %
- 
-    [  samples,  inputs ] = size( I_samples );
+
+    [ isamples,  inputs ] = size( I_samples );
     [ osamples, outputs ] = size( O_samples );
+    samples = isamples;
+
+    disp_freq = 10;
+    max_epoch = 100;
+    err_goal = 0.02;
+    lr = 0.000000025;
+    lr_inc = 1.05;
+    lr_dec = 0.7;
+    momentum = 0.9;
+    err_ratio = 1.04;
 
     p = struct( ...
-        'inputs'           , inputs  ...
-       ,'outputs'          , 1       ...
-       ,'hidden_units'     , 0       ...
-       ,'Wh'               , []      ...
-       ,'Bh'               , []      ...
-       ,'Wo'               , []      ...
-       ,'freezeHiddenLayer', 0       ...
+        'inputs'           , inputs       ...
+       ,'outputs'          , outputs      ...
+       ,'hidden_units'     , hidden_units ...
+       ,'Wh'               , []           ...
+       ,'Bh'               , []           ...
+       ,'Wo'               , []           ...
+       ,'Tp'               , [disp_freq max_epoch err_goal lr lr_inc lr_dec momentum err_ratio] ...
+       ,'freezeHiddenLayer', 0            ...
     );
     p = class( p, 'bayes1' ); 
     
@@ -55,22 +66,72 @@ function p = bayes1(I_samples, O_samples, varargin )
         end
     end
 
-    if ~isempty( varargin ) 
-        p.hidden_units = varargin{1};
-        if ( nargin > 3 )
-            p.freezeHiddenLayer = 1;
-        end
-    end
-    
-    if ((1 == osamples) & (1 == outputs))
-        p.outputs = O_samples;
-        [p.Wh, p.Bh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
-    else    
-        p.outputs = outputs;
-        [p.Wh, p.Bh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
-        p = train( p, I_samples, O_samples, MaM );
-    end 
+    p.outputs = outputs;
+    [p.Wh, p.Bh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
         
+  % ---------------------------------------
+  % Generate Enhancement Functions of Inputs.
+  % 
+    if isempty( p.Wh )
+        H = [ ones(isamples,1) ];
+    else
+        H = [ ones(isamples,1), tansig( p.Wh * I_samples', p.Bh)' ];
+    end
+
+    p.Wo = O_samples' * pinv( H )';
+
+    %%% -----------------------------------------------------------
+    %%%  % Y (outputs x samples) = p.Wo (outputs x hiddens) * H' (hiddnes x samples)
+    %%%   p.Wo = O_samples' * pinv( H' );
+    %%% -----------------------------------------------------------
+
+  % ---------------------------------------
+  % Calculate Network Output
+  %
+    Y = (p.Wo * H');
+
+  % ---------------------------------------
+  % Assign Outputs to Classes
+  %
+    Yc = zeros( outputs, osamples );
+    for i=1:osamples 
+        max = 1;
+        for j=2:outputs 
+            if Y(j, i) > Y(max, i)
+                max = j;
+            end
+        end
+        Yc( max, i ) = 1;
+    end
+
+  % ---------------------------------------
+  % Calculate Mean Square Error
+  %
+    err =  Y - O_samples';
+%    err =  Yc - O_samples';
+    sse = 10^-20;
+    for i=1:outputs
+        sse = sse + (err(i, :) * err( i, : )');
+    end
+
+  % ---------------------------------------
+  % Calculate Structure and Data Size Penalty Terms
+  %
+    ParamCnt = p.outputs * p.hidden_units +  p.hidden_units * p.inputs; 
+    DataCnt  = isamples * (p.inputs + p.outputs); 
+
+  % ---------------------------------------
+  % Form Convergence Criterion
+  %
+    SEC = DataCnt * log( sse / (osamples * outputs) ) ...
+              + ParamCnt * log( DataCnt );
+    
+    fprintf( 1, '%d nodes: SEC = %e, sse = %e\n', p.hidden_units, SEC, sse );
+
+
+  % ----
+  %  p = train( p, I_samples, O_samples );
+
 % endfunction bayes1
 
 % --------------------------------
@@ -94,6 +155,9 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
 % ****************************************
 % History:
 % $Log: bayes1.m,v $
+% Revision 1.2  1998/03/08 07:18:19  jak
+% Well .... it works now ... thanks to God.  -jak
+%
 % Revision 1.1  1998/03/08 00:23:37  jak
 % Ooops wrong name. -jak
 %
