@@ -11,7 +11,7 @@ function [Yc, Y] = eval( p, I_samples )
 %     I_samples -> samples x inputs
 %
 %
-% $Id: eval.m,v 1.4 1997/11/07 05:40:58 jak Exp $
+% $Id: eval.m,v 1.5 1997/11/07 06:20:08 jak Exp $
 %
 
     % ---------------------------------------
@@ -27,9 +27,9 @@ function [Yc, Y] = eval( p, I_samples )
     % ---------------------------------------
     % Augment Net Inputs (pad with zeros if necessary).
     %
-    % TEST FOR hidden_units A POWER OF 2 !!
-    % TEST FOR hidden_units SMALLER THAN p.inputs !!
-    if p.inputs ~= p.hidden_units
+    % should TEST FOR hidden_units A POWER OF 2 !!
+    % should TEST FOR hidden_units SMALLER THAN p.inputs !!
+    if p.inputs < p.hidden_units
         augmentation = zeros( samples, (p.hidden_units - p.inputs) );
         Inputs       = [ I_samples, augmentation ];
     else
@@ -44,7 +44,6 @@ function [Yc, Y] = eval( p, I_samples )
                   ,I_samples ...
                   ,ones( samples, 1) ...
                ]' ;
-%    Y  = p.Wo * tansig( rfft( Inputs' )' )';
 
     % ---------------------------------------
     % Assign Outputs to Classes
@@ -69,6 +68,9 @@ function [Yc, Y] = eval( p, I_samples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.5  1997/11/07 06:20:08  jak
+% Changed calling conventions, cleaned up stuff, ready for iteration. -jak
+%
 % Revision 1.4  1997/11/07 05:40:58  jak
 % Its working, but not very well at least as far as performace goes. -jak
 %
