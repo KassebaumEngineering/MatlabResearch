@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.5 1997/11/08 05:43:28 jak Exp $
+% $Id: train.m,v 1.6 1997/11/08 07:10:32 jak Exp $
 %
 
   % ---------------------------------------
@@ -115,16 +115,8 @@ function p = train(p, I_samples, O_samples, varargin)
         sse = sse + err(i, :) * err( i, : )';
     end
 
-  % ---------------------------------------
-  % Calculate Structure and Data Size Penalty Terms
-  %
-    ParamCnt = p.outputs * p.hidden_units; % + ((p.hidden_units) * p.inputs) 
-    DataCnt  = isamples * p.inputs + osamples * p.outputs; 
-
-  % ---------------------------------------
-  % Form Convergence Criterion
-  %
-    fprintf( 1, '%d nodes: sse = %f, rcond = %e\n', p.hidden_units, sse, rcond( HtH ));
+    fprintf( 1, '%d nodes: sse = %f, rcond = %e\n', ...
+        p.hidden_units, sse, rcond( HtH ));
     
     if 1 == p.freezeHiddenLayer
         return;
@@ -188,16 +180,7 @@ function p = train(p, I_samples, O_samples, varargin)
         for i=1:outputs
             newsse = newsse + err(i, :) * err(i, :)' ;
         end
-        
-      % ---------------------------------------
-      % Calculate Structure and Data Size Penalty Terms
-      %
-        ParamCnt =  p.outputs * hidden_units; % + (hidden_units * p.inputs);
-        DataCnt  = isamples * p.inputs + osamples * p.outputs; 
-        
-      % ---------------------------------------
-      % Form Convergence Criterion
-      %              
+
         fprintf( 1, '%d nodes: sse = %f, rcond = %e\n', hidden_units, newsse, rCondition);
         
         if ( rCondition < 0.5*10^-6 )
@@ -211,6 +194,7 @@ function p = train(p, I_samples, O_samples, varargin)
             p.Bh = Bh;
             p.hidden_units = hidden_units;
             p.Wo = Wo;
+            iterate = iterate - 1;
         end
         
         if (10 < iterate) & (AugmentCnt <= 1)
@@ -234,6 +218,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.6  1997/11/08 07:10:32  jak
+% cleaned up a little bit. -jak
+%
 % Revision 1.5  1997/11/08 05:43:28  jak
 % Converted chen_fln to use sse and matrix condition as stopping criteria. -jak
 %
