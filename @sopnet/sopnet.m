@@ -17,7 +17,7 @@ function p = sopnet(I_samples, O_samples, varargin )
 %     using random Nguyen-Widrow values.  The min and max are  
 %     used to adjust the Nguyen-Widrow values.
 %
-% $Id: sopnet.m,v 1.2 1997/11/18 16:50:28 jak Exp $
+% $Id: sopnet.m,v 1.3 1997/11/25 18:26:14 jak Exp $
 %
  
     [  samples,  inputs ] = size( I_samples );
@@ -64,10 +64,10 @@ function p = sopnet(I_samples, O_samples, varargin )
     
     if ((1 == osamples) & (1 == outputs))
         p.outputs = O_samples;
-        [p.Wh, p.Bh, p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
+        [p.Wh, p.Bh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
     else    
         p.outputs = outputs;
-        [p.Wh, p.Bh, p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
+        [p.Wh, p.Bh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
         p = train( p, I_samples, O_samples, MaM );
     end 
         
@@ -86,14 +86,17 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
   % Use Random Nguyen-Widrow Values
   %
   [W1,B1] = nwtan( hidden_units, inputs, MinsAndMaxs);
-  W2 = rands( outputs, hidden_units) * 0.5; 
-
+  W2 = rands( outputs, hidden_units + 1) * 0.5; 
+  
 % endfunction initialize
 
 
 % ****************************************
 % History:
 % $Log: sopnet.m,v $
+% Revision 1.3  1997/11/25 18:26:14  jak
+% Added some useful features to improve classification performance. -jak
+%
 % Revision 1.2  1997/11/18 16:50:28  jak
 % Some experiments to test performance under different SECs. -jak
 %

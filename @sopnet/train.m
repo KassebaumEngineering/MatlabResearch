@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.3 1997/11/18 16:50:29 jak Exp $
+% $Id: train.m,v 1.4 1997/11/25 18:26:15 jak Exp $
 %
 
   % ---------------------------------------
@@ -70,8 +70,12 @@ function p = train(p, I_samples, O_samples, varargin)
 
   % ---------------------------------------
   % Generate Enhancement Functions of Inputs.
-  %
-    H = [ tansig( p.Wh * I_samples', p.Bh)' ];
+  % 
+    if isempty( p.Wh )
+        H = [ ones(isamples,1) ];
+    else
+        H = [ ones(isamples, 1), tansig( p.Wh * I_samples', p.Bh)' ];
+    end
 
     HtH = H' * H;
     HtB = H' * O_samples ;
@@ -104,11 +108,30 @@ function p = train(p, I_samples, O_samples, varargin)
 %    p.Wo = HtB' / HtH ;
 
   % ---------------------------------------
-  % Calculate Sum Square Error
+  % Calculate Network Output
   %
     Y = (p.Wo * H');
-    err =  Y - O_samples';
-    mse = 0.0;
+
+  % ---------------------------------------
+  % Assign Outputs to Classes
+  %
+    Yc = zeros( outputs, osamples );
+    for i=1:osamples 
+        max = 1;
+        for j=2:outputs 
+            if Y(j, i) > Y(max, i)
+                max = j;
+            end
+        end
+        Yc( max, i ) = 1;
+    end
+
+  % ---------------------------------------
+  % Calculate Mean Square Error
+  %
+%    err =  Y - O_samples';
+    err =  Yc - O_samples';
+    mse = 10^-20;
     for i=1:outputs
         mse = mse + (err(i, :) * err( i, : )') / (osamples * outputs);
     end
@@ -125,7 +148,7 @@ function p = train(p, I_samples, O_samples, varargin)
     SEC = DataCnt * log( mse ) ...
               + ParamCnt * log( DataCnt );
     
-    fprintf( 1, '%d nodes: SEC = %f, mse = %f\n', p.hidden_units, SEC, mse );
+    fprintf( 1, '%d nodes: SEC = %e, mse = %e\n', p.hidden_units, SEC, mse );
     
     if 1 == p.freezeHiddenLayer
         return;
@@ -187,11 +210,31 @@ function p = train(p, I_samples, O_samples, varargin)
         Wo = ((V * Sinv) * (U' * augHtB))';
 
       % ---------------------------------------
-      % Calculate Sum Square Error
+      % Calculate Network Output
       %
         Y = (Wo * augH');
-        err =  Y - O_samples';
-        newmse = 0.0;
+        
+      % ---------------------------------------
+      % Assign Outputs to Classes
+      %
+        Yc = zeros( outputs, osamples );
+        for i=1:osamples 
+            max = 1;
+            for j=2:outputs 
+                if Y( j, i ) > Y( max, i )
+                    max = j;
+                end
+            end
+            Yc( max, i ) = 1;
+        end
+
+      % ---------------------------------------
+      % Calculate Mean Square Error
+      %
+%        err =  Y - O_samples';
+        err =  Yc - O_samples';
+
+        newmse = 10^-20;
         for i=1:outputs
             newmse = newmse + err(i, :) * err(i, :)' / (osamples * outputs) ;
         end
@@ -208,7 +251,7 @@ function p = train(p, I_samples, O_samples, varargin)
         newSEC = DataCnt * log( newmse ) ...
                  +  ParamCnt * log( DataCnt );
               
-        fprintf( 1, '%d nodes: SEC = %f, mse = %f\n', hidden_units, newSEC , newmse);
+        fprintf( 1, '%d nodes: SEC = %e, mse = %e\n', hidden_units, newSEC , newmse);
         
         if ( newSEC < SEC )
             SEC = newSEC;
@@ -223,7 +266,7 @@ function p = train(p, I_samples, O_samples, varargin)
             iterate = 1;
             quit = 0;
         elseif (MaxIterations <= iterate) & (AugmentCnt == 1)
-            fprintf( 1, 'DONE! %d nodes: SEC = %f, mse = %f\n', ...
+            fprintf( 1, 'DONE! %d nodes: SEC = %e, mse = %e\n', ...
                 p.hidden_units, SEC, mse );
             quit = 1;            
         elseif (MaxIterations <= iterate)
@@ -241,6 +284,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.4  1997/11/25 18:26:15  jak
+% Added some useful features to improve classification performance. -jak
+%
 % Revision 1.3  1997/11/18 16:50:29  jak
 % Some experiments to test performance under different SECs. -jak
 %

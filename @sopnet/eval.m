@@ -10,7 +10,7 @@ function [Yc, Y] = eval(p, I_samples)
 %     p         -> a Perceptron Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.1 1997/11/08 04:37:54 jak Exp $
+% $Id: eval.m,v 1.2 1997/11/25 18:26:14 jak Exp $
 %
 
     % ---------------------------------------
@@ -26,7 +26,7 @@ function [Yc, Y] = eval(p, I_samples)
     % ---------------------------------------
     % Calculate Net Output.
     %
-    Y = p.Wo * [tansig( p.Wh * I_samples', p.Bh)' ]';
+    Y = p.Wo * [ ones( samples, 1 ), tansig( p.Wh * I_samples', p.Bh)' ]';
 
 
     % ---------------------------------------
@@ -52,6 +52,9 @@ function [Yc, Y] = eval(p, I_samples)
 % ****************************************
 % History:
 % $Log: eval.m,v $
+% Revision 1.2  1997/11/25 18:26:14  jak
+% Added some useful features to improve classification performance. -jak
+%
 % Revision 1.1  1997/11/08 04:37:54  jak
 % First Turn in of Self-Organizing Percepton Network! - jak
 %
