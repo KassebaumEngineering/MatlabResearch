@@ -7,9 +7,9 @@ function tree = getQuantTrees( p, aCount )
 % Description: Return a list of subtrees which have at 
 %     least 'aCount' number of leaves.
 %
-% $Id: getQuantTrees.m,v 1.1 2000/03/15 09:58:13 jak Exp $
+% $Id: getQuantTrees.m,v 1.2 2000/03/15 10:18:35 jak Exp $
 %
-
+    tree = TreeNode();
 % Need a Heuristic!  
 %  -> ummmm...  If the (count of all children / num of all immediate children) 
 %               is less than aCount then stop.  That is, only expand
@@ -18,14 +18,18 @@ function tree = getQuantTrees( p, aCount )
 %               heuristic will, no dobt, need improvement.
 %
     if ( countAllChildren(p) / getChildCount(p) >= aCount ) then
-		node = getFirstChild( rootNode );
-		while ( hasSibling( node ) )
-		    sibling = getQuantTrees( node, aCount );
-		    node.setNextSibling( sibling );
-			node = sibling;
+		node = getFirstChild( p );
+		while ( ~isempty( node ) )
+		    subtree = getQuantTrees( node, aCount );
+			
+		  %
+		  % Flatten Subtree into tree.
+		  %
+		    tree.addChild( getFirstChild( subtree ));
+		  
+			node = getNextSibling( node );
 		end
 	else
-	    tree = TreeNode();
 	    tree.setValue( p );
 	end
     
@@ -36,6 +40,9 @@ function tree = getQuantTrees( p, aCount )
 % History:
 % 
 % $Log: getQuantTrees.m,v $
+% Revision 1.2  2000/03/15 10:18:35  jak
+% Hmmm more fixes?  This should flatten the list. -jak
+%
 % Revision 1.1  2000/03/15 09:58:13  jak
 % More code - to try and extract interesting subtrees. -jak
 %
