@@ -12,7 +12,7 @@ function p = mackayglass
 % consists of 1 'iodata' with 4 inputs and 1 outputs
 % for each regression sample. 
 %
-% $Id: mackayglass.m,v 1.1 1998/03/19 05:48:40 jak Exp $
+% $Id: mackayglass.m,v 1.2 2000/01/09 20:43:29 jak Exp $
 %
 % Uses private script Files:
 %     mkgl_trn.m   - for training data
@@ -33,16 +33,16 @@ function p = mackayglass
     % test samples
     %
     test_data  = iodata( 'for testing', ...
-        mkgl_test(:, 1:4 ), ...
-        mkgl_test(:,  5  )  ...
+        mkglass_test(:, 1:4 ), ...
+        mkglass_test(:,  5  )  ...
     );
 
     % ------------------------------------------------------------
     % training samples
     %
     train_data  = iodata( 'for training', ...
-        mkgl_trn(:, 1:4 ), ...
-        mkgl_trn(:,  5  )  ...
+        mkglass_train(:, 1:4 ), ...
+        mkglass_train(:,  5  )  ...
     );
 
     p.trainingCases = number_of_training_cases;
@@ -57,6 +57,9 @@ function p = mackayglass
 % History:
 % 
 % $Log: mackayglass.m,v $
+% Revision 1.2  2000/01/09 20:43:29  jak
+% Fixed a bug in the naming conventions. -jak
+%
 % Revision 1.1  1998/03/19 05:48:40  jak
 % A New data set - the mackay glass chaos data! -jak
 %
