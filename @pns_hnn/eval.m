@@ -7,7 +7,7 @@ function [Yc, Y] = eval( p, InputSamples )
 % Description: The eval method evaluates the
 % network 
 %
-% $Id: eval.m,v 1.2 1997/11/07 05:40:16 jak Exp $
+% $Id: eval.m,v 1.3 1997/11/18 16:49:43 jak Exp $
 %
 
   if isempty( p.S )
@@ -19,7 +19,7 @@ function [Yc, Y] = eval( p, InputSamples )
       RejectSamples = sparse(samples, inputs);
       AcceptSamples = sparse(samples, inputs);
       for i=1:samples 
-          if PreRejc(i, 0) > PreRejc(i, 1)
+          if PreRejc(i, 1) > PreRejc(i, 2)
               RejectSamples(i,:) = InputSamples(i,:);
           else
               AcceptSamples(i,:) = InputSamples(i,:); 
@@ -27,7 +27,8 @@ function [Yc, Y] = eval( p, InputSamples )
      end
      
      [YcA, YA] = eval( p.N, AcceptSamples );
-     [PostRejc, PostRej] = eval( p.S, YA );
+     [PostRejc, PostRej] = eval( p.S, [AcceptSamples, YA] );
+%     [PostRejc, PostRej] = eval( p.S, YA );
      [i,j,s] = find( PostRejc );
      for k = 1,length(i)
          RejectSamples(i(k),:) = AcceptSamples(i(k),:);
@@ -37,7 +38,7 @@ function [Yc, Y] = eval( p, InputSamples )
      [YcR, YR] = eval( p.pnsReject, RejectSamples );
      
      for i = 1:samples
-         if (PreRejc(i, 0) > PreRejc(i, 1)) | (PostRejc(i,0) > PostRejc(i,0) )
+         if (PreRejc(i, 1) > PreRejc(i, 2)) | (PostRejc(i,1) > PostRejc(i,2) )
              Yc(i,:) = YcR(i,:);
               Y(i,:) = YR(i,:);
          else
@@ -54,6 +55,9 @@ function [Yc, Y] = eval( p, InputSamples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.3  1997/11/18 16:49:43  jak
+% Fixing bugs - still not ready for prime time though. -jak
+%
 % Revision 1.2  1997/11/07 05:40:16  jak
 % More code - not working yet though!  -jak
 %
