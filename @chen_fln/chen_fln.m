@@ -1,21 +1,40 @@
 
-function p = chen_fln(I_samples, hidden_units, varargin)
+function p = chen_fln(I_samples, O_samples, varargin )
 % CHEN_FLN - Constructor for Chen_fln Class
 %
-%     p = chen_fln(I_samples, hidden_units [, O_Samples or NumberOfOutputVars])
+%     p = chen_fln(I_samples, O_samples [, hidden_units, CvgOff] )
 %     
-%     Creates a neural network with an fixed architecture
-%     given by the number of hidden units, and I_samples and O_Samples
-%     passed as arguments.  The network is initialized using
-%     random Nguyen-Widrow values.  The min and max are used to 
-%     adjust the Nguyen-Widrow values.
+%     Creates a neural network with an  architecture
+%     which supports the I_samples and O_Samples which were
+%     passed as arguments.  The hidden_units argument, if
+%     supplied is an initializer for the number of hidden_units
+%     to use.  The CvgOff argument, if supplied, tells the 
+%     object to avoid iterative training and to use exactly the
+%     number of hidden_nodes specified.  The O_Samples argument
+%     may be a single number, instead of a vector of samples.
+%     If it is, then it refers to the size of the output layer,
+%     and NO training will be done. The network is initialized 
+%     using random Nguyen-Widrow values.  The min and max are  
+%     used to adjust the Nguyen-Widrow values.
 %
-% $Id: chen_fln.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: chen_fln.m,v 1.2 1997/11/07 05:39:15 jak Exp $
 %
  
-    [ samples, inputs ] = size( I_samples );
+    [  samples,  inputs ] = size( I_samples );
+    [ osamples, outputs ] = size( O_samples );
 
-    MaM = zeros(inputs,2);
+    p = struct( ...
+        'inputs'           , inputs  ...
+       ,'outputs'          , 1       ...
+       ,'hidden_units'     , 10      ...
+       ,'Wh'               , []      ...
+       ,'Bh'               , []      ...
+       ,'Wo'               , []      ...
+       ,'freezeHiddenLayer', 0       ...
+    );
+    p = class( p, 'chen_fln' ); 
+    
+    MaM = zeros( inputs, 2);
     for r= 1:inputs
         min = I_samples(1, r);
         max = I_samples(1, r);
@@ -31,28 +50,21 @@ function p = chen_fln(I_samples, hidden_units, varargin)
         MaM(r,2)=max;
     end
 
-    p.inputs = inputs;
-    p.hidden_units = hidden_units;
-    
-    
-    if isempty( varargin{1} )
-        p.outputs = 1;
-        [p.Wh p.Bh p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
-        p = class(p, 'chen_fln');
-    else    
-        [osamples outputs] = size( varargin{1} );
-        if osamples == 1 & outputs == 1 % arg is scalar number of outputs
-            p.outputs = varargin{1};
-            [p.Wh p.Bh p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
-            p = class(p, 'chen_fln');
-        else                            % Train the Network Output Layer
-            p.outputs = outputs;
-            O_samples = varargin{1};
-            [p.Wh p.Bh p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
-            p = class(p, 'chen_fln');
-            p = train( p, I_samples, O_samples );
+    if ~isempty( varargin ) 
+        p.hidden_units = varargin{1};
+        if ( nargin > 3 )
+            p.freezeHiddenLayer = 1;
         end
     end
+    
+    if ((1 == osamples) & (1 == outputs))
+        p.outputs = O_samples;
+        [p.Wh, p.Bh, p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
+    else    
+        p.outputs = outputs;
+        [p.Wh, p.Bh, p.Wo] = initialize( p.inputs, p.hidden_units, p.outputs, MaM );
+        p = train( p, I_samples, O_samples, MaM );
+    end 
         
 % endfunction chen_fln
 
@@ -77,7 +89,11 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
 % ****************************************
 % History:
 % $Log: chen_fln.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.2  1997/11/07 05:39:15  jak
+% Major Changes - now works with svd, qr, and standard lu.
+% Also uses the SEC to stop iterative training. -jak
+%
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %

@@ -10,7 +10,7 @@ function [Yc, Y] = eval(p, I_samples)
 %     p         -> a Perceptron Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.3 1997/11/04 16:54:05 jak Exp $
+% $Id: eval.m,v 1.4 1997/11/07 05:39:15 jak Exp $
 %
 
     % ---------------------------------------
@@ -26,7 +26,8 @@ function [Yc, Y] = eval(p, I_samples)
     % ---------------------------------------
     % Calculate Net Output.
     %
-    Y = p.Wo * [tansig( p.Wh * I_samples', p.Bh)' , I_samples]';
+%    Y = p.Wo * [tansig( p.Wh * I_samples', p.Bh)' , I_samples]';
+    Y = p.Wo * [tansig( p.Wh * I_samples', p.Bh)' ]';
 
 
     % ---------------------------------------
@@ -52,6 +53,10 @@ function [Yc, Y] = eval(p, I_samples)
 % ****************************************
 % History:
 % $Log: eval.m,v $
+% Revision 1.4  1997/11/07 05:39:15  jak
+% Major Changes - now works with svd, qr, and standard lu.
+% Also uses the SEC to stop iterative training. -jak
+%
 % Revision 1.3  1997/11/04 16:54:05  jak
 % Corrected a misspelled word. -jak
 %

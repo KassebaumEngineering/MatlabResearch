@@ -1,25 +1,31 @@
 
-function p = train(p, I_samples, O_samples)
+function p = train(p, I_samples, O_samples, varargin)
 % TRAIN - Chen_fln Class Instance Method
 %
-%     p = train(p, I_samples, O_samples)
+%     p = train(p, I_samples, O_samples, [MinsAndMaxes])
 %     
 %     Train uses Linear Least Mean Squares to set the
 %     network weights to minimize squared error
 %     on the training set provided. The 'p' is the 
 %     perceptron to be trained, the 'I_samples' and
 %     'O_samples' are matrices of training data.
+%     The MinsAndMaxes argument is optional, and 
+%     contains a min and max data value for each input
+%     of the I_samples data set.
 %
-%     p         -> a Perceptron Instance
-%     I_samples -> samples x inputs
-%     O_samples -> samples x outputs
+%     p            -> a Perceptron Instance
+%     I_samples    -> samples x inputs
+%     O_samples    -> samples x outputs
+%     MinsAndMaxes -> inputs x 2 array of 
+%                     min (:,1) and max (:,2)
+%                     input data ranges.
 %
-% $Id: train.m,v 1.1 1997/10/28 18:38:43 jak Exp $
+% $Id: train.m,v 1.2 1997/11/07 05:39:16 jak Exp $
 %
 
-    % ---------------------------------------
-    % Network Architecture Validation
-    %
+  % ---------------------------------------
+  % Network Architecture Validation
+  %
     [isamples,  inputs ] = size( I_samples );
     [osamples, outputs ] = size( O_samples );
     if inputs ~= p.inputs
@@ -39,31 +45,185 @@ function p = train(p, I_samples, O_samples)
         error('chen_fln method: train()');        
     end
      
-    % ---------------------------------------
-    % Generate Enhancement Functions of Inputs.
-    %
-    H = [tansig( p.Wh * I_samples', p.Bh)' , I_samples];
+  % ---------------------------------------
+  % Find Mins and maxes for input data
+  %
+    if isempty( varargin )
+        MaM = zeros(inputs,2);
+        for r= 1:inputs
+            min = I_samples(1, r);
+            max = I_samples(1, r);
+            for i= 2:isamples
+            if  I_samples(i, r) > max
+                max = I_samples(i, r);
+            end
+            if  I_samples(i, r) < min
+                min = I_samples(i, r);
+            end
+            end
+            MaM(r,1)=min;
+            MaM(r,2)=max;
+        end
+    else
+        MaM = varargin{1};
+    end
+
+  % ---------------------------------------
+  % Generate Enhancement Functions of Inputs.
+  %
+  % orig: H = [tansig( p.Wh * I_samples', p.Bh)' , I_samples];
+  %
+    H = [ tansig( p.Wh * I_samples', p.Bh)' ];
 
     HtH = H' * H;
     HtB = H' * O_samples ;
-    [U S V] = svd( HtH );
-    [d1,d2] = size( S );
-    Sinv = zeros( d1, d1 );
-    for i=1: d1
-        if S(i,i) == 0.0
-            Sinv(i,i) = 0;
-        else
-            Sinv(i,i) = 1.0 / S(i,i);
-        end
-    end
-    p.Wo = ((V * Sinv) * (U' * HtB))';
 
+  % ---------------------------------------
+  % By Singular-Value Decomposition! (Works)
+  %    
+%    [U, S, V] = svd( HtH );
+%    [d1,d2] = size( S );
+%    Sinv = sparse( d1, d1 );
+%    for i=1: d1
+%        if (S(i,i) < 10^-20 * S(1,1))
+%            Sinv(i,i) = 0.0;
+%        else
+%            Sinv(i,i) = 1.0 / S(i,i);
+%        end
+%    end
+%    p.Wo = ((V * Sinv) * (U' * HtB))';
+    
+  % ---------------------------------------
+  % QR Method: (Works)
+  %
+%    [Q,R] = qr( HtH );
+%    p.Wo = (HtB' * Q) / R';
+
+ 
+  % ---------------------------------------
+  % Standard Method: (Works) 
+  %
+    p.Wo = HtB' / HtH ;
+
+  % ---------------------------------------
+  % Calculate Sum Square Error
+  %
+    Y = (p.Wo * H');
+    err =  Y - O_samples';
+    sse = 0.0;
+    for i=1:outputs
+        sse = sse + err(i, :) * err( i, : )';
+    end
+
+  % ---------------------------------------
+  % Calculate Structure and Data Size Penalty Terms
+  %
+    ParamCnt = p.outputs * p.hidden_units; % + ((p.hidden_units) * p.inputs) 
+    DataCnt  = isamples; 
+
+  % ---------------------------------------
+  % Form Convergence Criterion
+  %
+    SEC = 0.5 * DataCnt * log( sse ) ...
+              + (1.0 - 0.5) * ParamCnt * log( DataCnt );
+    SECprev = 2 * SEC;
+    
+    fprintf( 1, '%d nodes: SEC = %f\n', p.hidden_units, SEC );
+    
+    if 1 == p.freezeHiddenLayer
+        return;
+    end
+    
+    AugmentCnt = 5;
+    while ( SEC < SECprev )
+      % ---------------------------------------
+      % To augment HtH and HtB we must
+      % resize HtH and HtB, and add VtH
+      % and VtB respectively where V is
+      % the Augmentation Vector (from the
+      % new hidden node).
+
+      % Initialize weights and biases for new node.
+      % Use Random Nguyen-Widrow Values
+      %
+        [Wn,Bn] = nwtan( AugmentCnt, inputs, MaM );
+        Wh = [ p.Wh; Wn ];
+        Bh = [ p.Bh; Bn ];
+
+     %  Augmentation Vector
+        V = [ tansig( Wn * I_samples', Bn)' ];
+        
+     %  Augment H, HtH, and HtB
+        HtH = [ HtH , (H'*V) ; (V'*H) , (V'*V) ];
+        HtB = [ HtB  ; (V' * O_samples) ];
+        H = [ H, V ];
+        hidden_units = p.hidden_units+AugmentCnt;
+
+      % ---------------------------------------
+      % Solve for new Output Layer Weights
+      %
+        Wo = HtB' / HtH ;
+        
+      % ---------------------------------------
+      % By Singular-Value Decomposition! (Works)
+      %    
+%        [U, S, V] = svd( HtH );
+%        [d1,d2] = size( S );
+%        Sinv = sparse( d1, d1 );
+%        for i=1: d1
+%            if (S(i,i) < 10^-20 * S(1,1))
+%                Sinv(i,i) = 0.0;
+%            else
+%                Sinv(i,i) = 1.0 / S(i,i);
+%            end
+%        end
+%        Wo = ((V * Sinv) * (U' * HtB))';
+
+      % ---------------------------------------
+      % Calculate Sum Square Error
+      %
+        Y = (Wo * H');
+        err =  Y - O_samples';
+        sse = 0.0;
+        for i=1:outputs
+            sse = sse + err(i, :) * err(i, :)' ;
+        end
+        
+      % ---------------------------------------
+      % Calculate Structure and Data Size Penalty Terms
+      %
+        ParamCnt =  p.outputs * hidden_units; % + (hidden_units * p.inputs);
+        DataCnt  = isamples; 
+        
+      % ---------------------------------------
+      % Form Convergence Criterion
+      %
+        SECprev = SEC;
+        SEC = 0.9 * DataCnt * log( sse ) ...
+              + (1.0 - 0.9) * ParamCnt * log( DataCnt );
+              
+        fprintf( 1, '%d nodes: SEC = %f\n', hidden_units, SEC );
+        
+        if ( SEC < SECprev )
+            p.Wh = Wh;
+            p.Bh = Bh;
+            p.hidden_units = hidden_units;
+            p.Wo = Wo;
+        else
+            fprintf( 1, 'DONE! %d nodes: SEC = %f\n', p.hidden_units, SECprev );
+        end
+     end
+     
 %endfunction train
 
 % ****************************************
 % History:
 % $Log: train.m,v $
-% Revision 1.1  1997/10/28 18:38:43  jak
-% Initial revision
+% Revision 1.2  1997/11/07 05:39:16  jak
+% Major Changes - now works with svd, qr, and standard lu.
+% Also uses the SEC to stop iterative training. -jak
+%
+% Revision 1.1.1.1  1997/10/28 18:38:43  jak
+% Initial Import of Matlab Research tools and classes. -jak
 %
 %
