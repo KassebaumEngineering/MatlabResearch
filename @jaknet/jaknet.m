@@ -1,76 +1,49 @@
 
-function p = jaknet( I_samples, O_samples, varargin )
-% jaknet - jaknet Class Constructor Method
+function p = jaknet( I_samples, O_samples, hiddencnt, varargin )
+% jaknet - Constructor for mdlnet Class
 %
-%     p = jaknet( I_samples, O_samples )
+%     p = jaknet(I_samples, O_samples, hiddencnt [, classify] )
+%     
+%     Creates a neural network with an  architecture
+%     which supports the I_samples and O_Samples which were
+%     passed as arguments.  The hidden_units argument is an 
+%     initializer for the number of hidden_units to use.  The 
+%     'classify' argument defaults to '0', for no
+%     classification.  If you want classification, set 'classify'
+%     to '1'. The network is initialized using random Nguyen-Widrow 
+%     values.  The min and max are used to adjust the Nguyen-Widrow 
+%     values.
 %
-% Description: Jaknet creates a single layer perceptron
-% structured network with tanh nonlinearities at the
-% outputs of the hidden layer.
+% $Id: jaknet.m,v 1.3 1999/09/30 04:34:54 jak Exp $
 %
-% $Id: jaknet.m,v 1.2 1998/03/07 22:58:14 jak Exp $
-%
+    if ~isempty( varargin )
+        classify = varargin{1};
+    else 
+        classify = 0;
+    end
     
-    [  samples,  inputs ] = size( I_samples );
+    [ isamples,  inputs ] = size( I_samples );
     [ osamples, outputs ] = size( O_samples );
 
-    % ------------------------------------
-    % The Hadamard Transform Matrix
-    %   HADAMARD(N) is a Hadamard matrix of order N, that is,
-    %   a matrix H with elements 1 or -1 such that H'*H = N*EYE(N).
-    %   An N-by-N Hadamard matrix with N > 2 exists only if REM(N,4)=0.
-    %   This function handles only the cases where N, N/12 or N/20
-    %   is a power of 2.
-    % ------------------------------------
-    % thus :
-    % hadasizes = [4,8,12,16,20,24,32,40,48,60,64,72,80, ... ];
-    % 4 ,8 ,16,32,64
-    % 12,24,48,72
-    % 20,40,60,80
-    
-    hadasizes = [];
-    for i=2:log2(outputs)+1
-        hadasizes = [ hadasizes, 2^i ];
-    end
-    for i=2:log2(outputs)-1
-        hadasizes = [ hadasizes, 3*2^i ];
-    end
-    for i=2:log2(outputs)-1
-        hadasizes = [ hadasizes, 5*2^i ];
-    end
-    hadasizes = sort( hadasizes );
-
-    for i = 1 : length( hadasizes )
-        if outputs < hadasizes( i )
-            hadaputs = hadasizes( i );
-            break;
-        end
-    end
-
-    hadamat = hadamard( hadaputs );
-    invhadamat = hadamat' / hadaputs;
-    
     p = struct( ...
-        'inputs'           , inputs                ...
-       ,'outputs'          , outputs               ...
-       ,'hadaputs'         , hadaputs              ...
-       ,'hadamat'          , hadamat               ...
-       ,'invhadamat'       , invhadamat            ...
-       ,'hidden_units'     , 0                     ...
-       ,'Wh'               , []                    ...
-       ,'Wo'               , []                    ...
-       ,'freezeHiddenLayer', 0                     ...
+        'inputs'           , inputs    ...
+       ,'outputs'          , outputs   ...
+       ,'hidden_units'     , hiddencnt ...
+       ,'param_count'      , outputs * (hiddencnt+1) ...
+                             + hiddencnt * (inputs+1) ...
+       ,'Wh'               , []        ...
+       ,'Bh'               , []        ...
+       ,'Wo'               , []        ...
+       ,'classify'         , classify ...
     );
-    p = class( p, 'jaknet');
     
-    
-    H_samples = (p.hadamat * [ O_samples, zeros(samples, hadaputs-outputs ) ]')';
-    
+    p = class( p, 'jaknet' ); 
+       
     MaM = zeros( inputs, 2);
     for r= 1:inputs
         min = I_samples(1, r);
         max = I_samples(1, r);
-        for i= 2:samples
+        for i= 2:isamples
         if  I_samples(i, r) > max
             max = I_samples(i, r);
         end
@@ -86,75 +59,92 @@ function p = jaknet( I_samples, O_samples, varargin )
             MaM(r,2)=max;
         end
     end
-
-    MaMout = zeros( hadaputs, 2);
-    for r= 1:hadaputs
-        min = H_samples(1, r);
-        max = H_samples(1, r);
-        for i= 2:samples
-        if  H_samples(i, r) > max
-            max = H_samples(i, r);
+    
+    
+  %
+  % Initialize Hidden Weights deterministically
+  % 
+    nodes_per_dimension = p.hidden_units ^ (1/p.inputs)
+    p.Wh = zeros( p.hidden_units, p.inputs);    
+    p.Bh =  rand( p.hidden_units, 1       );
+    
+    delta = 1/(2*nodes_per_dimension);
+    pval  = delta:(2 * delta):(nodes_per_dimension * 2 * delta + delta)
+    
+    k = ones( p.inputs );
+    for h = 1:p.hidden_units
+        for i = 1:p.inputs
+            p.Wh( h, i ) = pval( k(i) );
         end
-        if  H_samples(i, r) < min
-            min = H_samples(i, r);
-        end
-        end
-        if min == max
-            MaMout(r,1)= -1;
-            MaMout(r,2)= 1;
-        else
-            MaMout(r,1)=min;
-            MaMout(r,2)=max;
-        end
-    end
-
-    if ~isempty( varargin ) 
-        p.hidden_units = varargin{1};
-        if ( nargin > 3 )
-            p.freezeHiddenLayer = 1;
+        k(1) = k(1) + 1;
+        for i = 1: (p.inputs - 1)
+            if ( k(i) > floor( nodes_per_dimension )+1 )
+                k(i+1) = k(i+1) + 1;
+                k(i) = 1;
+            end
         end
     end
     
-    if ((1 == osamples) & (1 == outputs))
-        p.outputs = O_samples;
-        [ p.Wh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.hadaputs, MaM, MaMout );
-    else    
-        p.outputs = outputs;
-        [ p.Wh, p.Wo ] = initialize( p.inputs, p.hidden_units, p.hadaputs, MaM, MaMout );
-        p = train( p, I_samples, O_samples );
-    end 
+    p.Wh = 2 * p.Wh - 1;
+    p.Bh = 2 * p.Bh - 1;
+    
 
-% endfunction jaknet
-
-% --------------------------------
-% Subfunction initialize
-%
-%    initialize uses the Random Nguyen-Widrow formulas to 
-%    initialize the weights of the Perceptron
-%
-
-function [ W1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs, MaMout )
-
-  % Initialize weights and biases.
+  % Initialize Hidden weights and biases.
   % Use Random Nguyen-Widrow Values
   %
-  [Wr,Br] = nwtan( hidden_units, inputs, MinsAndMaxs);
-  [Wi,Bi] = nwtan( hidden_units, inputs, MinsAndMaxs);
-  W1 = [ Br + i*Bi, Wr + i*Wi ];
-  [Wr,Br] = nwtan( outputs, hidden_units, MaMout );
-  [Wi,Bi] = nwtan( outputs, hidden_units, MaMout );
-  W2 = [ Br + i*Bi, Wr + i*Wi ]; 
-  
-% endfunction initialize
+  % [p.Wh, p.Bh] = nwtan( p.hidden_units, MaM );
+  % ---
+    % Uniform Distribution (original Nguyen-Widrow)
+%    p.Wh = 2 * rand( p.hidden_units, p.inputs ) - 1;
+%    p.Bh = 2 * rand( p.hidden_units, 1        ) - 1;
 
-%*****************************************************
+    % Normal Distribution (variation on Nguyen-Widrow)
+    %p.Wh = randn( p.hidden_units, p.inputs ); 
+    %p.Bh = randn( p.hidden_units, 1        ); 
+    
+    % Normalize Rows to Unit Vectors
+    p.Wh = sqrt( ones ./ ( sum(( p.Wh .* p.Wh )') ))' * ones(1,p.inputs) .* p.Wh ;
+
+    % Scale Hidden Units to cover region based on the number of 
+    % hidden units and inputs desired.
+    magw = 0.1 * p.hidden_units ^ ( 1/p.inputs );
+    p.Wh = magw * p.Wh ; % randnr(p.hidden_units, p.inputs);
+    p.Bh = magw * p.Bh ; % rands(p.hidden_units, 1 );
+  
+   % Scale Hidden Weights to accomodate the input data ranges.
+    rngmin = MaM(:,1);
+    rngmax = MaM(:,2);
+    rng =  rngmax - rngmin;
+    mid = (rngmax + rngmin)/2;    
+    p.Wh = 2 * p.Wh ./ ( ones(p.hidden_units,1) * rng' );
+    p.Bh = p.Bh - p.Wh * mid;
+  
+  % ---
+    
+  % Initialize Output weights and biases.
+  % Use Least Mean Squares
+  %
+    H = [ ones(isamples, 1), tansig( p.Wh * I_samples' +  p.Bh * ones( 1, isamples ) )' ];
+    p.Wo = O_samples' / H';
+
+  %  p.Wo = O_samples' * pinv( H )';
+  
+%%  % 1 iteration of iterative improvement:
+%%    err = p.Wo * H' - O_samples';  err * err' /(isamples*p.outputs)
+%%    werr = err / H';
+%%    p.Wo = p.Wo + werr;
+%%    
+%%    err = p.Wo * H' - O_samples'; err * err' /(isamples*p.outputs)
+            
+% endfunction mdlnet
+
+% ****************************************
 % History:
-% 
 % $Log: jaknet.m,v $
-% Revision 1.2  1998/03/07 22:58:14  jak
-% I don't know .... hmmm. -jak
+% Revision 1.3  1999/09/30 04:34:54  jak
+% Changes to files - added use of deterministic initialization. -jak
 %
-% Revision 1.1  1997/11/29 21:10:39  jak
-% A New network type - uses LMS training to improve first layer. -jak
+% Revision 1.3  1999/09/19 23:34:32  jak
+% New version of @jaknet - to use for MDL surface topology experiments. -jak
 %
 %

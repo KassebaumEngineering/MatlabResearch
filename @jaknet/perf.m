@@ -11,7 +11,7 @@ function [SEC, MSE] = perf(p, I_samples, O_samples)
 %     p         -> a mdlnet Instance
 %     I_samples -> samples x inputs
 %
-% $Id: perf.m,v 1.1 1999/09/19 23:24:57 jak Exp $
+% $Id: perf.m,v 1.2 1999/09/30 04:34:54 jak Exp $
 %
 
     % ---------------------------------------
@@ -34,7 +34,7 @@ function [SEC, MSE] = perf(p, I_samples, O_samples)
     % ---------------------------------------
     % Calculate Net Output.
     %
-    Y = p.Wo * [ ones( samples, 1 ), tansig( p.Wh * I_samples', p.Bh)' ]';
+    Y = p.Wo * [ ones( samples, 1 ), tansig( p.Wh * I_samples' + p.Bh * ones( 1, samples ))' ]';
 
     if ( 1 == p.classify )
         % ---------------------------------------
@@ -75,16 +75,24 @@ function [SEC, MSE] = perf(p, I_samples, O_samples)
   % Calculate Structure and Data Size Penalty Terms
   %
     ParamCnt = p.param_count; 
-    DataCnt  = samples * (p.inputs + p.outputs); 
+    DataCnt  = samples * p.outputs; 
+  %
+  % incorrect because residual is the error in the outputs - not the inputs
+  %
+  %  DataCnt  = samples * (p.inputs + p.outputs); 
 
   % ---------------------------------------
   % Form Convergence Criterion
   %
-    SEC = DataCnt * log( MSE ) + ParamCnt * log( DataCnt );
+%%    SEC = DataCnt * log( MSE ) + ParamCnt * log( DataCnt );
+    SEC = DataCnt * log2( MSE )/2 + ParamCnt;
 
 % ****************************************
 % History:
 % $Log: perf.m,v $
-% Revision 1.1  1999/09/19 23:24:57  jak
-% Initial revision
+% Revision 1.2  1999/09/30 04:34:54  jak
+% Changes to files - added use of deterministic initialization. -jak
+%
+% Revision 1.1  1999/09/19 23:34:32  jak
+% New version of @jaknet - to use for MDL surface topology experiments. -jak
 %
