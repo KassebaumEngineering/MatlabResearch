@@ -10,7 +10,7 @@ function [ Yc, Y ] = eval( p, I_samples )
 %     p         -> a jaknet Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.1 1997/11/29 21:10:39 jak Exp $
+% $Id: eval.m,v 1.2 1998/03/07 22:58:13 jak Exp $
 %
 
   % ---------------------------------------
@@ -26,8 +26,15 @@ function [ Yc, Y ] = eval( p, I_samples )
   % ---------------------------------------
   % Calculate Network Output
   %
-    Y = p.Wo * [ ones(samples, 1), tanh(p.Wh * [ ones(samples, 1), I_samples]')' ]';
-
+    Yh = p.invhadamat * ...
+         real( ( p.Wo * ...
+               [ ones(samples, 1), ...
+                 tanh(p.Wh * [ ones(samples, 1), I_samples]')' ...
+               ]' ...
+             ) ...
+         );
+    Y = Yh(1:p.outputs, : );
+    
   % ---------------------------------------
   % Assign Outputs to Classes
   %
@@ -51,6 +58,9 @@ function [ Yc, Y ] = eval( p, I_samples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.2  1998/03/07 22:58:13  jak
+% I don't know .... hmmm. -jak
+%
 % Revision 1.1  1997/11/29 21:10:39  jak
 % A New network type - uses LMS training to improve first layer. -jak
 %
