@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.8 1997/11/08 04:44:57 jak Exp $
+% $Id: pshnn.m,v 1.9 1997/11/08 07:10:08 jak Exp $
 %
 %*****************************************************
 %
@@ -30,10 +30,41 @@
 %
 % Build the 1st N-unit and evaluate it.
 %
-%  net = rfft_fln( inputsamples, outputsamples );
-  net = chen_fln( inputsamples, outputsamples );
-%  net = sopnet( inputsamples, outputsamples );
+%t1 = cputime;
+%  rfft = rfft_fln( inputsamples, outputsamples );
+t2 = cputime;
+%t2 - t1
+  chenn = chen_fln( inputsamples, outputsamples );
+t3 = cputime;
+t3 - t2
+  sop = sopnet( inputsamples, outputsamples );
+t4 = cputime;
+t4 - t3
 
+   net = chenn;
+%  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
+  [ Yc, Y ] = eval( net, inputsamples );
+
+%
+% Get Class by Class Probability of Error
+%
+  [cmat, pc, tpc] = conf( outputsamples, Yc );
+  pc
+  tpc
+  cmat
+  
+%
+% Test The Network
+%
+  alltestingsamples = getAllData( getTestingSamples( myData ));
+  [ isamples, osamples ] = getSamplePair( alltestingsamples, ':' );
+  [ Yc, Y ] = eval( net, isamples );
+  [cmat, pc, tpc] = conf( osamples, Yc );
+  pc
+  tpc
+  cmat
+
+   net = sop;
 %  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
   [ Yc, Y ] = eval( net, inputsamples );
 
@@ -65,6 +96,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.9  1997/11/08 07:10:08  jak
+% Added timing and comparisons. -jak
+%
 % Revision 1.8  1997/11/08 04:44:57  jak
 % Testing fix of chen_fln. -jak
 %
