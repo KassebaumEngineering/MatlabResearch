@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: bayes.m,v 1.1 1998/03/07 22:57:21 jak Exp $
+% $Id: bayes.m,v 1.2 1998/03/08 07:17:42 jak Exp $
 %
 %*****************************************************
 %
@@ -22,54 +22,61 @@
   myData = colorado;
 
 %
-% Get the training data from the collection.
+% Get the training/testing data from the collection.
 %
   alltrainingsamples = getAllData( getTrainingSamples( myData ));
-  [ inputsamples, outputsamples ] = getSamplePair( alltrainingsamples, ':' );
-
-%
-% Build the 1st N-unit and evaluate it.
-%
-%t1 = cputime;
-%  net = rfft_fln( inputsamples, outputsamples );
-%t2 = cputime;
-%t2 - t1
-%  chenn = chen_fln( inputsamples, outputsamples );
-%t3 = cputime;
-%t3 - t2
-%  net = sopnet( inputsamples, outputsamples );
-%t4 = cputime;
-%t4 - t3
-
-%   net = sop;
-%  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
-
-%  net = pns_hnn( inputsamples, outputsamples );
+  [ trIsamples, trOsamples ] = getSamplePair( alltrainingsamples, ':' );
   
-  net = jaknet( inputsamples, outputsamples, 40 );
-  
-%  net = consensus( inputsamples, outputsamples, 10 );
-  [ Yc, Y ] = eval( net, inputsamples );
-
-%
-% Get Class by Class Probability of Error
-%
-  [cmat, pc, tpc] = conf( outputsamples, Yc );
-  pc
-  tpc
-  cmat
-  
-%
-% Test The Network
-%
   alltestingsamples = getAllData( getTestingSamples( myData ));
-  [ isamples, osamples ] = getSamplePair( alltestingsamples, ':' );
-  [ Yc, Y ] = eval( net, isamples );
-  [cmat, pc, tpc] = conf( osamples, Yc );
-  pc
-  tpc
-  cmat
- 
+  [ teIsamples, teOsamples ] = getSamplePair( alltestingsamples, ':' );
+
+
+  for i = 80:-10:20,
+    for j = 1:2,
+    
+      net(i,j,1).net = bayes1( trIsamples, trOsamples, i );
+      
+    %
+    % Get Class by Class Probability of Error
+    %
+      [ Yc, Y ] = eval( net(i,j,1).net, trIsamples );
+      [cmat, pc, TrErr] = conf( trOsamples, Yc );
+      TrainError(i,j,1) = TrErr;
+      TrErr
+      
+    %
+    % Test The Network
+    %
+      [ Yc, Y ] = eval( net(i,j,1).net, teIsamples );
+      [cmat, pc, TeErr] = conf( teOsamples, Yc );
+      TestErr(i,j,1) = TeErr;
+      TeErr
+      
+    %
+    % Train the Network
+    %
+      for k = 2:5,
+        net(i,j,k).net = train( net(i,j,k-1).net, trIsamples, trOsamples, 100 );
+  
+        %
+        % Get Class by Class Probability of Error
+        %
+          [ Yc, Y ] = eval( net(i,j,k).net, trIsamples );
+          [cmat, pc, TrErr] = conf( trOsamples, Yc );
+          TrainError(i,j,k) = TrErr;
+          TrErr
+
+        %
+        % Test The Network
+        %
+          [ Yc, Y ] = eval( net(i,j,k).net, teIsamples );
+          [cmat, pc, TeErr] = conf( teOsamples, Yc );
+          TestErr(i,j,k) = TeErr;
+          TeErr
+          
+      end
+    end
+  end 
 %
 % Done! Remove path addition to be thorough.
 %
@@ -79,6 +86,9 @@
 % History:
 % 
 % $Log: bayes.m,v $
+% Revision 1.2  1998/03/08 07:17:42  jak
+% More interesting Tests. -jak
+%
 % Revision 1.1  1998/03/07 22:57:21  jak
 % Added new script file. -jak
 %
