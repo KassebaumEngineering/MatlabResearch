@@ -6,33 +6,34 @@ function p = BISTree( I_samples, O_samples, quantiles )
 %
 % Description:
 %
-% $Id: BISTree.m,v 1.3 2000/03/15 09:58:13 jak Exp $
+% $Id: BISTree.m,v 1.4 2000/03/27 13:36:20 jak Exp $
 %
     bis = BitInterleavedSort( I_samples, quantiles );
 	
-	node = rootNode = TreeNode();
+	rootNode = TreeNode;
+    node = rootNode;
 	for i = 1:bis.rows
 	    for j = 1:bis.quantiles
-		    if ( node.hasValue() ) then
-			    while ( bis(i,j) ~= node.getValue() )
-				    if ( node.hasSibling() )
-				        node = node.getNextSibling();
+		    if ( node.hasValue ) then
+			    while ( bis(i,j) ~= node.getValue )
+				    if ( node.hasSibling )
+				        node = node.getNextSibling;
 					else
 					    break;
-					endif
+					end
 				end
-		    	if ( bis(i,j) ~= node.getValue() ) then
-				    sibling = TreeNode();
+		    	if ( bis(i,j) ~= node.getValue ) then
+				    sibling = TreeNode;
 					sibling.setValue( bis(i,j) );
 					node.setNextSibling( sibling );
-					child = TreeNode();
+					child = TreeNode;
 					sibling.setFirstChild( child );
 				else
-				    child = node.getFirstChild();
+				    child = node.getFirstChild;
 				end
 			else
 		    	node.setValue( bis(i,j) );
-				child = TreeNode();
+				child = TreeNode;
 				node.setFirstChild( child );
 			end
 			last = node;
@@ -54,6 +55,9 @@ function p = BISTree( I_samples, O_samples, quantiles )
 % History:
 % 
 % $Log: BISTree.m,v $
+% Revision 1.4  2000/03/27 13:36:20  jak
+% Small changes trying to get it through compile. -jak
+%
 % Revision 1.3  2000/03/15 09:58:13  jak
 % More code - to try and extract interesting subtrees. -jak
 %

@@ -6,7 +6,7 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 %
 % Description:
 %
-% $Id: BISNet.m,v 1.2 2000/03/15 10:54:34 jak Exp $
+% $Id: BISNet.m,v 1.3 2000/03/27 13:36:16 jak Exp $
 %
     if ~isempty( varargin )
         classify = varargin{1};
@@ -16,7 +16,7 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 
     [ isamples,  inputs ] = size( I_samples );
     [ osamples, outputs ] = size( O_samples );
-	
+
 	bistree = BISTree( I_samples, quantiles );
 	qtree = getQuantTrees( bistree, samplesPerHiddenNode );
 	
@@ -43,7 +43,7 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 	node = getFirstChild( qtree );
 	i = 1;
 	while ( ~isempty( node ) )
-	    hidden[i] = getBISstats( node );
+	    hidden(i) = getBISstats( node );
 		node = getNextSibling( node );
     end
 	
@@ -62,6 +62,9 @@ function p = BISNet( I_samples, O_samples, quantiles, samplesPerHiddenNode, vara
 % History:
 % 
 % $Log: BISNet.m,v $
+% Revision 1.3  2000/03/27 13:36:16  jak
+% Small changes trying to get it through compile. -jak
+%
 % Revision 1.2  2000/03/15 10:54:34  jak
 % More changes to get closer to a working BISNET. -jak
 %
