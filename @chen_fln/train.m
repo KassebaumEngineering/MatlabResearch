@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.3 1997/11/08 04:37:25 jak Exp $
+% $Id: train.m,v 1.4 1997/11/08 04:45:25 jak Exp $
 %
 
   % ---------------------------------------
@@ -119,13 +119,13 @@ function p = train(p, I_samples, O_samples, varargin)
   % Calculate Structure and Data Size Penalty Terms
   %
     ParamCnt = p.outputs * p.hidden_units; % + ((p.hidden_units) * p.inputs) 
-    DataCnt  = isamples; 
+    DataCnt  = isamples * p.inputs + osamples * p.outputs; 
 
   % ---------------------------------------
   % Form Convergence Criterion
   %
-    SEC = 0.5 * DataCnt * log( sse ) ...
-              + (1.0 - 0.5) * ParamCnt * log( DataCnt );
+    SEC = DataCnt * log( sse ) ...
+              + ParamCnt * log( DataCnt );
     SECprev = 2 * SEC;
     
     fprintf( 1, '%d nodes: SEC = %f\n', p.hidden_units, SEC );
@@ -134,8 +134,10 @@ function p = train(p, I_samples, O_samples, varargin)
         return;
     end
     
-    AugmentCnt = 5;
-    while ( SEC < SECprev )
+    AugmentCnt = 10;
+    iterate = 0;
+    quit = 0;
+    while ( 1 ~= quit )
       % ---------------------------------------
       % To augment HtH and HtB we must
       % resize HtH and HtB, and add VtH
@@ -154,20 +156,21 @@ function p = train(p, I_samples, O_samples, varargin)
         V = [ tansig( Wn * I_samples', Bn)' ];
         
      %  Augment H, HtH, and HtB
-        HtH = [ HtH , (H'*V) ; (V'*H) , (V'*V) ];
-        HtB = [ HtB  ; (V' * O_samples) ];
-        H = [ H, V ];
+        augHtH = [ HtH , (H'*V) ; (V'*H) , (V'*V) ];
+        augHtB = [ HtB  ; (V' * O_samples) ];
+        augH = [ H, V ];
         hidden_units = p.hidden_units+AugmentCnt;
 
       % ---------------------------------------
       % Solve for new Output Layer Weights
+      % (Standard Method)
       %
-        Wo = HtB' / HtH ;
+        Wo = augHtB' / augHtH ;
         
       % ---------------------------------------
       % By Singular-Value Decomposition! (Works)
       %    
-%        [U, S, V] = svd( HtH );
+%        [U, S, V] = svd( augHtH );
 %        [d1,d2] = size( S );
 %        Sinv = sparse( d1, d1 );
 %        for i=1: d1
@@ -177,12 +180,12 @@ function p = train(p, I_samples, O_samples, varargin)
 %                Sinv(i,i) = 1.0 / S(i,i);
 %            end
 %        end
-%        Wo = ((V * Sinv) * (U' * HtB))';
+%        Wo = ((V * Sinv) * (U' * augHtB))';
 
       % ---------------------------------------
       % Calculate Sum Square Error
       %
-        Y = (Wo * H');
+        Y = (Wo * augH');
         err =  Y - O_samples';
         sse = 0.0;
         for i=1:outputs
@@ -193,24 +196,37 @@ function p = train(p, I_samples, O_samples, varargin)
       % Calculate Structure and Data Size Penalty Terms
       %
         ParamCnt =  p.outputs * hidden_units; % + (hidden_units * p.inputs);
-        DataCnt  = isamples; 
+        DataCnt  = isamples * p.inputs + osamples * p.outputs; 
         
       % ---------------------------------------
       % Form Convergence Criterion
       %
-        SECprev = SEC;
-        SEC = 0.5 * DataCnt * log( sse ) ...
-              + (1.0 - 0.5) * ParamCnt * log( DataCnt );
+        newSEC = DataCnt * log( sse ) ...
+                 +  ParamCnt * log( DataCnt );
               
-        fprintf( 1, '%d nodes: SEC = %f\n', hidden_units, SEC );
+        fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', hidden_units, newSEC, sse);
         
-        if ( SEC < SECprev )
+        if ( newSEC < SEC )
+            SEC = newSEC;
+            HtH = augHtH;
+            HtB = augHtB;
+            H   = augH;
             p.Wh = Wh;
             p.Bh = Bh;
             p.hidden_units = hidden_units;
             p.Wo = Wo;
+            iterate = 0;
+            quit = 0;
+        elseif (10 < iterate) & (AugmentCnt == 1)
+            fprintf( 1, 'DONE! %d nodes: SEC = %f\n', p.hidden_units, SEC );
+            quit = 1;            
+        elseif (10 < iterate)
+            iterate = 0;
+            quit = 0;
+            AugmentCnt = AugmentCnt-1;
         else
-            fprintf( 1, 'DONE! %d nodes: SEC = %f\n', p.hidden_units, SECprev );
+            iterate = iterate + 1;
+            quit = 0;
         end
      end
      
@@ -219,6 +235,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.4  1997/11/08 04:45:25  jak
+% Used experience from SOPNET to improve Chen_fln. -jak
+%
 % Revision 1.3  1997/11/08 04:37:25  jak
 % Fixed a bug in the SEC calculation!. -jak
 %
