@@ -26,32 +26,27 @@ function [ omat, I ] = bitinterleavesort( imat, quantiles )
 % vector value.  For hidden nodes of a neural net (where each column is a
 % hidden unit, the matrix should be transposed.
 %
-% $Id: bitinterleavesort.m,v 1.1 1999/10/20 06:46:36 jak Exp $
+% Also Note:  For ease of use, the character string outputs have been 
+% formated so that any one row may be 'eval'-ed to obtain an array of
+% bit strings - each string is one block of equal significance bits in
+% column order.  This make postprocessing a little easier.
+%
+% Finally -> I should probably turn this into a class.  Then I could
+% have reasonable questions of it in the form of instance methods. Rather
+% than handing back a hideous encoded structure.  TODO ;-)
+%
+% $Id: bitinterleavesort.m,v 1.2 1999/10/20 07:52:46 jak Exp $
 %
 % 
     [ rows, cols ] = size( imat );
     maxval = (2^quantiles) - 1;
   %
-  % Discover Min and Max Values - data ranges
+  % Discover Min and Max Values of Columns - data ranges
   %
-    minvalue = zeros( 1, cols );
-    maxvalue = zeros( 1, cols );
+    minvalue = min(imat);
+    maxvalue = max(imat);
     scale  = zeros( 1, cols );
     offset = zeros( 1, cols );
-    for c=1:cols 
-        minvalue( 1, c ) = imat( 1, c ); 
-        maxvalue( 1, c ) = imat( 1, c ); 
-    end
-    for r=2:rows
-        for c=1:cols 
-            if ( minvalue( 1, c ) > imat( r, c ) )
-                minvalue( 1, c ) = imat( r, c );
-            end
-            if ( maxvalue( 1, c ) < imat( r, c ) )
-                maxvalue( 1, c ) = imat( r, c );
-            end
-        end
-    end
     for c=1:cols 
          scale( 1, c ) = maxval / ( maxvalue( 1, c ) - minvalue( 1, c ) );
         offset( 1, c ) = minvalue( 1, c );
@@ -74,16 +69,22 @@ function [ omat, I ] = bitinterleavesort( imat, quantiles )
   %
   % Generate Bit-Interleaved Output Matrix
   %
-    omat = char(rows,cols*quantiles); %omat = zeros( rows, cols*quantiles );
+    omat = char(rows,2*2 + cols*quantiles + (cols-1)*3);
     for r=1:rows
+        omat(r,1:2) = '[''';
         for q=1:quantiles
-           mask = bitshift( 1, q-1 );
-           for c=1:cols 
+            mask = bitshift( 1, q-1 );
+            for c=1:cols 
                 if ( bitand( smat( r, c ), mask ) ~= 0 )
-                    omat(r,(q-1)*cols + c) = '1'; 
+                    omat(r,2 + (q-1)*(cols+3) + c) = '1'; 
                 else 
-                    omat(r,(q-1)*cols + c) = '0'; 
+                    omat(r,2 + (q-1)*(cols+3) + c) = '0'; 
                 end
+            end
+            if (q ~= quantiles )
+                omat(r,2 + (q-1)*(cols+3) + cols + 1:2 + (q-1)*(cols+3) + cols + 3) = ''';''';
+            else
+                omat(r,2 + (q-1)*(cols+3) + cols + 1:2 + (q-1)*(cols+3) + cols + 2) = ''']';
             end
         end
     end
@@ -99,6 +100,10 @@ function [ omat, I ] = bitinterleavesort( imat, quantiles )
 % --------------------------------
 % History:
 % $Log: bitinterleavesort.m,v $
+% Revision 1.2  1999/10/20 07:52:46  jak
+% Added code to use the builtin min and max functions, and to return formated
+% string which may be passed to 'eval'. -jak
+%
 % Revision 1.1  1999/10/20 06:46:36  jak
 % New file for performing a bit-interleaved sort on the rows of a multi-column matrix. -jak
 %
