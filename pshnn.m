@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.2 1997/10/29 00:10:18 jak Exp $
+% $Id: pshnn.m,v 1.3 1997/11/04 16:53:42 jak Exp $
 %
 %*****************************************************
 %
@@ -30,8 +30,8 @@
 %
 % Build the 1st N-unit and evaluate it.
 %
-  net = chen_fln( inputsamples, 100, outputsamples );
-  [Yc, Y ] = eval( net, inputsamples );
+  net = rfft_fln( inputsamples, 8, outputsamples );
+  [ Yc, Y ] = eval( net, inputsamples );
 
 %
 % Get Class by Class Probability of Error
@@ -39,7 +39,20 @@
   [cmat, pc, tpc] = conf( outputsamples, Yc );
   pc
   tpc
-  size( cmat )
+  cmat
+  
+  
+%
+% Test The Network
+%
+  alltestingsamples = getAllData( getTestingSamples( myData ));
+  [ isamples, osamples ] = getSamplePair( alltestingsamples, ':' );
+  [ Yc, Y ] = eval( net, isamples );
+  [cmat, pc, tpc] = conf( osamples, Yc );
+  pc
+  tpc
+  cmat
+ 
 %
 % Done! Remove path addition to be thorough.
 %
@@ -49,6 +62,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.3  1997/11/04 16:53:42  jak
+% Added Testing of Network. -jak
+%
 % Revision 1.2  1997/10/29 00:10:18  jak
 % Added more to Pshnn and added confusion matrix function. -jak
 %
