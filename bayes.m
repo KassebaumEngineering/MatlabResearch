@@ -1,12 +1,12 @@
 
 %*****************************************************
 %
-% pshnn.m  - MATLAB Script for PSHNN Algorithm 
+% bayes.m  - MATLAB Script for Bayesian Experiments  
 %
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.14 1998/03/07 22:57:22 jak Exp $
+% $Id: bayes.m,v 1.1 1998/03/07 22:57:21 jak Exp $
 %
 %*****************************************************
 %
@@ -78,47 +78,8 @@
 %*****************************************************
 % History:
 % 
-% $Log: pshnn.m,v $
-% Revision 1.14  1998/03/07 22:57:22  jak
+% $Log: bayes.m,v $
+% Revision 1.1  1998/03/07 22:57:21  jak
 % Added new script file. -jak
-%
-% Revision 1.13  1997/12/02 18:22:20  jak
-% Pshnn - experiments. All others a bug fix and code additions. -jak
-%
-% Revision 1.12  1997/11/29 21:10:06  jak
-% Testing modifications - inconsequential. -jak
-%
-% Revision 1.11  1997/11/25 18:24:28  jak
-% Small modifications for testing. -jak
-%
-% Revision 1.10  1997/11/18 16:47:53  jak
-% fixed a bug in conf, more additions for testing in pshnn. -jak
-%
-% Revision 1.9  1997/11/08 07:10:08  jak
-% Added timing and comparisons. -jak
-%
-% Revision 1.8  1997/11/08 04:44:57  jak
-% Testing fix of chen_fln. -jak
-%
-% Revision 1.7  1997/11/08 04:36:58  jak
-% Added sopnet. -jak
-%
-% Revision 1.6  1997/11/07 06:19:37  jak
-% Fixed new calling conventions for rfft_fln. -jak
-%
-% Revision 1.5  1997/11/07 05:38:22  jak
-% Added more testing code. -jak
-%
-% Revision 1.4  1997/11/05 04:39:34  jak
-% Added a commented line to compare with chen_fln. -jak
-%
-% Revision 1.3  1997/11/04 16:53:42  jak
-% Added Testing of Network. -jak
-%
-% Revision 1.2  1997/10/29 00:10:18  jak
-% Added more to Pshnn and added confusion matrix function. -jak
-%
-% Revision 1.1.1.1  1997/10/28 18:38:36  jak
-% Initial Import of Matlab Research tools and classes. -jak
 %
 %
