@@ -6,7 +6,7 @@ function p = BISTree( I_samples, O_samples, quantiles )
 %
 % Description:
 %
-% $Id: BISTree.m,v 1.2 2000/03/15 09:08:31 jak Exp $
+% $Id: BISTree.m,v 1.3 2000/03/15 09:58:13 jak Exp $
 %
     bis = BitInterleavedSort( I_samples, quantiles );
 	
@@ -35,8 +35,10 @@ function p = BISTree( I_samples, O_samples, quantiles )
 				child = TreeNode();
 				node.setFirstChild( child );
 			end
+			last = node;
 			node = child;
 		end
+		last.setLeafReference( bis{ i, 1:bis.quantiles } );
 		node = rootNode;
 	end
 
@@ -52,6 +54,9 @@ function p = BISTree( I_samples, O_samples, quantiles )
 % History:
 % 
 % $Log: BISTree.m,v $
+% Revision 1.3  2000/03/15 09:58:13  jak
+% More code - to try and extract interesting subtrees. -jak
+%
 % Revision 1.2  2000/03/15 09:08:31  jak
 % Fixes to the tree walking construction. -jak
 %
