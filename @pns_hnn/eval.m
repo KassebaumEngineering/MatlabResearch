@@ -1,5 +1,5 @@
 
-function [Yc, Y] = eval( p, InputSamples )
+function [Yc, Y] = eval( p, I_samples )
 % eval - pns_hnn Class Method
 %
 %     [Yc, Y] = eval( p, InputSamples )
@@ -7,46 +7,59 @@ function [Yc, Y] = eval( p, InputSamples )
 % Description: The eval method evaluates the
 % network 
 %
-% $Id: eval.m,v 1.3 1997/11/18 16:49:43 jak Exp $
+% $Id: eval.m,v 1.4 1997/11/25 18:24:54 jak Exp $
 %
 
-  if isempty( p.S )
-      [Yc, Y] = eval( p.N, InputSamples );
+  if ~isempty( p.transform )
+      [Nothing, InputSamples] = eval( p.transform, I_samples );
   else
-      [PreRejc, PreRej] = eval( p.P, InputSamples );
-    
+      InputSamples = I_samples;
+  end
+  
+  if isempty( p.S ) & ~isempty( p.N )
       [samples inputs] = size( InputSamples );
-      RejectSamples = sparse(samples, inputs);
-      AcceptSamples = sparse(samples, inputs);
-      for i=1:samples 
-          if PreRejc(i, 1) > PreRejc(i, 2)
-              RejectSamples(i,:) = InputSamples(i,:);
+      Yc = zeros( samples,  p.outputCnt );
+      Y  = zeros( samples,  p.outputCnt );
+      
+      [Yci, Yi] = eval( p.N, InputSamples );
+      for j = 1:length( p.outputClass )
+          Yc( :, p.outputClass(j) ) = Yci( :, j );
+           Y( :, p.outputClass(j) ) =  Yi( :, j );
+      end
+      
+  elseif isempty( p.N )
+      Yc = [];
+      Y  = [];
+      
+  else
+  
+      [samples inputs] = size( InputSamples );
+      Yc = zeros( samples,  p.outputCnt );
+      Y  = zeros( samples,  p.outputCnt );
+      for i = 1:samples 
+          [ PreRejc, PreRej ] = eval( p.P, InputSamples(i,:) );
+          if PreRejc(1, 1) > PreRejc(1, 2)
+              [ Yci, Yi ] = eval( p.pnsReject, InputSamples(i,:) );
+              
           else
-              AcceptSamples(i,:) = InputSamples(i,:); 
+              [ Yci, Yi ] = eval( p.N, InputSamples(i,:) );
+%              [PostRejc, PostRej ] = eval( p.S, [InputSamples(i,:), Yi]);
+              [PostRejc, PostRej ] = eval( p.S, Yi );
+
+              if PostRejc(1, 1) > PostRejc(1, 2) 
+%                  if ~isempty( p.Srej )
+%                      [ Yci, Yi ] = eval( p.Srej, InputSamples(i,:) );
+%                  else
+                      [ Yci, Yi ] = eval( p.pnsReject, InputSamples(i,:) );
+%                  end
+              end
           end
-     end
-     
-     [YcA, YA] = eval( p.N, AcceptSamples );
-     [PostRejc, PostRej] = eval( p.S, [AcceptSamples, YA] );
-%     [PostRejc, PostRej] = eval( p.S, YA );
-     [i,j,s] = find( PostRejc );
-     for k = 1,length(i)
-         RejectSamples(i(k),:) = AcceptSamples(i(k),:);
-         AcceptSamples(i(k),:) = zeros(1,inputs);
-     end
-     
-     [YcR, YR] = eval( p.pnsReject, RejectSamples );
-     
-     for i = 1:samples
-         if (PreRejc(i, 1) > PreRejc(i, 2)) | (PostRejc(i,1) > PostRejc(i,2) )
-             Yc(i,:) = YcR(i,:);
-              Y(i,:) = YR(i,:);
-         else
-             Yc(i,:) = YcA(i,:);
-              Y(i,:) = YA(i,:);
-         end
-     end
-     
+          for j = 1:length( p.outputClass )
+              Yc( i, p.outputClass(j) ) = Yci( 1, j );
+               Y( i, p.outputClass(j) ) =  Yi( 1, j );
+          end
+      end
+           
   end
 
 % endfunction eval
@@ -55,6 +68,9 @@ function [Yc, Y] = eval( p, InputSamples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.4  1997/11/25 18:24:54  jak
+% Total re-write to improve useability. -jak
+%
 % Revision 1.3  1997/11/18 16:49:43  jak
 % Fixing bugs - still not ready for prime time though. -jak
 %
