@@ -17,7 +17,7 @@ function p = bayes1(I_samples, O_samples, varargin )
 %     using random Nguyen-Widrow values.  The min and max are  
 %     used to adjust the Nguyen-Widrow values.
 %
-% $Id: sopnet.m,v 1.1 1998/03/07 22:57:37 jak Exp $
+% $Id: bayes1.m,v 1.1 1998/03/08 00:23:37 jak Exp $
 %
  
     [  samples,  inputs ] = size( I_samples );
@@ -93,7 +93,10 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
 
 % ****************************************
 % History:
-% $Log: sopnet.m,v $
+% $Log: bayes1.m,v $
+% Revision 1.1  1998/03/08 00:23:37  jak
+% Ooops wrong name. -jak
+%
 % Revision 1.1  1998/03/07 22:57:37  jak
 % Added new test class. -jak
 %
