@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.6 1997/11/07 06:19:37 jak Exp $
+% $Id: pshnn.m,v 1.7 1997/11/08 04:36:58 jak Exp $
 %
 %*****************************************************
 %
@@ -30,8 +30,9 @@
 %
 % Build the 1st N-unit and evaluate it.
 %
-  net = rfft_fln( inputsamples, outputsamples );
+%  net = rfft_fln( inputsamples, outputsamples );
 %  net = chen_fln( inputsamples, outputsamples );
+  net = sopnet( inputsamples, outputsamples );
 
 %  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
   [ Yc, Y ] = eval( net, inputsamples );
@@ -64,6 +65,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.7  1997/11/08 04:36:58  jak
+% Added sopnet. -jak
+%
 % Revision 1.6  1997/11/07 06:19:37  jak
 % Fixed new calling conventions for rfft_fln. -jak
 %
