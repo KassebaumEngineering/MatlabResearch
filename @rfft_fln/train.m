@@ -14,7 +14,7 @@ function p = train( p, I_samples, O_samples )
 %     I_samples -> samples x inputs
 %     O_samples -> samples x outputs
 %
-% $Id: train.m,v 1.1 1997/11/04 16:55:12 jak Exp $
+% $Id: train.m,v 1.2 1997/11/04 17:36:00 jak Exp $
 %
 
     % ---------------------------------------
@@ -54,7 +54,7 @@ function p = train( p, I_samples, O_samples )
     % ---------------------------------------
     % Calculate Enhancement Functions of Inputs.
     %
-    H = [ fft( Inputs ), I_samples];
+    H = [ fft( Inputs' )', I_samples];
 
     HtH = H' * H;
     HtB = H' * O_samples ;
@@ -76,6 +76,9 @@ function p = train( p, I_samples, O_samples )
 % History:
 % 
 % $Log: train.m,v $
+% Revision 1.2  1997/11/04 17:36:00  jak
+% Changed fft so that the fft would be over te input variables. -jak
+%
 % Revision 1.1  1997/11/04 16:55:12  jak
 % First Check in of running fft Network Class. -jak
 %

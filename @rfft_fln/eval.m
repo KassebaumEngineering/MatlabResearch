@@ -11,7 +11,7 @@ function [Yc, Y] = eval( p, I_samples )
 %     I_samples -> samples x inputs
 %
 %
-% $Id: eval.m,v 1.1 1997/11/04 16:55:11 jak Exp $
+% $Id: eval.m,v 1.2 1997/11/04 17:35:59 jak Exp $
 %
 
     % ---------------------------------------
@@ -39,7 +39,7 @@ function [Yc, Y] = eval( p, I_samples )
     % ---------------------------------------
     % Calculate Net Output.
     %
-    Y = p.Wo * [ fft( Inputs ) , I_samples]';
+    Y = p.Wo * [ fft( Inputs' )' , I_samples]';
 
     % ---------------------------------------
     % Assign Outputs to Classes
@@ -64,6 +64,9 @@ function [Yc, Y] = eval( p, I_samples )
 % History:
 % 
 % $Log: eval.m,v $
+% Revision 1.2  1997/11/04 17:35:59  jak
+% Changed fft so that the fft would be over te input variables. -jak
+%
 % Revision 1.1  1997/11/04 16:55:11  jak
 % First Check in of running fft Network Class. -jak
 %
