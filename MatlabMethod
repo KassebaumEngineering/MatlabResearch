@@ -1,0 +1,62 @@
+#!/bin/tcsh
+#
+#-----------------------------------------------------
+# MatlabMethod
+#
+# $Id: MatlabMethod,v 1.1 1997/10/28 18:38:36 jak Exp $
+#
+# A Bourne-Shell Script to Generate MATLAB-Style 
+# Class Method Files with CVS and RCS variables 
+# and default stucture.
+#
+#   Usage: MatlabMethod methodName(s)
+#-----------------------------------------------------
+#
+
+set USAGE="Usage: $0 <listOfMethodNames>" 
+
+if ($#argv == 0) then
+    echo $USAGE
+    echo
+    exit 1
+endif
+
+set dirname=`pwd`
+set classname=$dirname:t
+
+foreach f ($argv)
+
+cat > $f.m <<EOF
+
+function p = $f( p, arg )
+% $f - $classname Class Method
+%
+%     p = $f( p, arg )
+%
+% Description:
+%
+% \$Id\$
+%
+
+
+% if this is the constructor uncomment the following:
+% p = class( p, '$classname');
+
+% endfunction $f
+
+%*****************************************************
+% History:
+% 
+% \$Log\$
+%
+EOF
+
+end #foreach
+
+#-----------------------------------------------------
+# History:
+# $Log: MatlabMethod,v $
+# Revision 1.1  1997/10/28 18:38:36  jak
+# Initial revision
+#
+#
