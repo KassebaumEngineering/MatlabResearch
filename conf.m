@@ -14,11 +14,11 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 % Each input (Desired and Actual) is of the form 
 % 'samples' x 'output classes'.
 %
-% $Id: conf.m,v 1.3 1997/11/25 18:24:28 jak Exp $
+% $Id: conf.m,v 1.4 1997/11/29 21:10:05 jak Exp $
 %
 % 
     err = Desired - Actual;
-    
+
     [ samples, classes ] = size( Desired );
     
     cmat = zeros(classes, classes);
@@ -70,6 +70,9 @@ function [cmat, pc, tpc] = conf( Desired, Actual )
 % --------------------------------
 % History:
 % $Log: conf.m,v $
+% Revision 1.4  1997/11/29 21:10:05  jak
+% Testing modifications - inconsequential. -jak
+%
 % Revision 1.3  1997/11/25 18:24:28  jak
 % Small modifications for testing. -jak
 %

@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.11 1997/11/25 18:24:28 jak Exp $
+% $Id: pshnn.m,v 1.12 1997/11/29 21:10:06 jak Exp $
 %
 %*****************************************************
 %
@@ -44,7 +44,9 @@
 %   net = sop;
 %  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
 
-  net = pns_hnn( inputsamples, outputsamples );
+%  net = pns_hnn( inputsamples, outputsamples );
+  
+  net = jaknet( inputsamples, outputsamples, 50 );
   
 %  net = consensus( inputsamples, outputsamples, 10 );
   [ Yc, Y ] = eval( net, inputsamples );
@@ -77,6 +79,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.12  1997/11/29 21:10:06  jak
+% Testing modifications - inconsequential. -jak
+%
 % Revision 1.11  1997/11/25 18:24:28  jak
 % Small modifications for testing. -jak
 %
