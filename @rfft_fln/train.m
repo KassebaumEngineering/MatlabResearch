@@ -14,7 +14,7 @@ function p = train( p, I_samples, O_samples )
 %     I_samples -> samples x inputs
 %     O_samples -> samples x outputs
 %
-% $Id: train.m,v 1.6 1997/11/08 07:10:59 jak Exp $
+% $Id: train.m,v 1.7 1997/12/02 18:22:38 jak Exp $
 %
 
     % ---------------------------------------
@@ -42,8 +42,8 @@ function p = train( p, I_samples, O_samples )
     % ---------------------------------------
     % Augment Net Inputs (pad with zeros if necessary).
     %
-    % TEST FOR hidden_units A POWER OF 2 !!
-    % TEST FOR hidden_units SMALLER THAN p.inputs !!
+    % Should TEST FOR hidden_units A POWER OF 2 !!
+    % Should TEST FOR hidden_units SMALLER THAN p.inputs !!
     if p.inputs ~= p.hidden_units
         augmentation = zeros( isamples, (p.hidden_units - p.inputs) );
         Inputs       = [ I_samples, augmentation ];
@@ -56,7 +56,8 @@ function p = train( p, I_samples, O_samples )
     %
 
     H = [ ...
-          tansig( rfft( Inputs' )' ) ...
+          tansig( irfft( Inputs' )' ) ...
+%          ,tansig( irfft( Inputs' )' ) ...
 %          ,I_samples ...
 %          ,ones( isamples, 1) ...
         ];
@@ -138,6 +139,7 @@ function p = train( p, I_samples, O_samples )
 
         H = [ ...
                  tansig( rfft( Inputs' )' ) ...
+%                ,tansig( irfft( Inputs' )' ) ...
 %                ,I_samples ...
 %                ,ones( isamples, 1) ...
             ];
@@ -212,6 +214,9 @@ function p = train( p, I_samples, O_samples )
 % History:
 % 
 % $Log: train.m,v $
+% Revision 1.7  1997/12/02 18:22:38  jak
+% experiments. -jak
+%
 % Revision 1.6  1997/11/08 07:10:59  jak
 % Corrections for truth in SEC calculations! Improved performance. -jak
 %
