@@ -2,13 +2,15 @@
 function p = sopnet(I_samples, O_samples, varargin )
 % sopnet - Constructor for sopnet Class
 %
-%     p = sopnet(I_samples, O_samples [, hidden_units, CvgOff] )
+%     p = sopnet(I_samples, O_samples [, classify, hidden_units, CvgOff] )
 %     
 %     Creates a neural network with an  architecture
 %     which supports the I_samples and O_Samples which were
 %     passed as arguments.  The hidden_units argument, if
 %     supplied is an initializer for the number of hidden_units
-%     to use.  The CvgOff argument, if supplied, tells the 
+%     to use.  The 'classify' argument defaults to '0', for no
+%     classification.  If you want classification, set 'classify'
+%     to '1'. The CvgOff argument, if supplied, tells the 
 %     object to avoid iterative training and to use exactly the
 %     number of hidden_nodes specified.  The O_Samples argument
 %     may be a single number, instead of a vector of samples.
@@ -17,7 +19,7 @@ function p = sopnet(I_samples, O_samples, varargin )
 %     using random Nguyen-Widrow values.  The min and max are  
 %     used to adjust the Nguyen-Widrow values.
 %
-% $Id: sopnet.m,v 1.3 1997/11/25 18:26:14 jak Exp $
+% $Id: sopnet.m,v 1.4 1999/09/30 04:52:55 jak Exp $
 %
  
     [  samples,  inputs ] = size( I_samples );
@@ -31,6 +33,7 @@ function p = sopnet(I_samples, O_samples, varargin )
        ,'Bh'               , []      ...
        ,'Wo'               , []      ...
        ,'freezeHiddenLayer', 0       ...
+       ,'classify'         , 0       ...
     );
     p = class( p, 'sopnet' ); 
     
@@ -56,8 +59,11 @@ function p = sopnet(I_samples, O_samples, varargin )
     end
 
     if ~isempty( varargin ) 
-        p.hidden_units = varargin{1};
+        p.classify = varargin{1};
         if ( nargin > 3 )
+            p.hidden_units = varargin{2};
+        end
+        if ( nargin > 4 )
             p.freezeHiddenLayer = 1;
         end
     end
@@ -94,6 +100,12 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
 % ****************************************
 % History:
 % $Log: sopnet.m,v $
+% Revision 1.4  1999/09/30 04:52:55  jak
+% Re-introducing upgrade. -jak
+%
+% Revision 1.4  1999/09/19 23:41:50  jak
+% Fixed for using classsification as well as regression. -jak
+%
 % Revision 1.3  1997/11/25 18:26:14  jak
 % Added some useful features to improve classification performance. -jak
 %
