@@ -4,13 +4,13 @@ function [Yc, Y] = eval(p, I_samples)
 %
 %     p = eval(p, I_samples)
 %     
-%     Eval evalutes the neural netowrk 'p' using 
+%     Eval evalutes the neural network 'p' using 
 %     the 'I_samples' data provided.
 %
 %     p         -> a Perceptron Instance
 %     I_samples -> samples x inputs
 %
-% $Id: eval.m,v 1.2 1997/10/29 00:10:44 jak Exp $
+% $Id: eval.m,v 1.3 1997/11/04 16:54:05 jak Exp $
 %
 
     % ---------------------------------------
@@ -52,6 +52,9 @@ function [Yc, Y] = eval(p, I_samples)
 % ****************************************
 % History:
 % $Log: eval.m,v $
+% Revision 1.3  1997/11/04 16:54:05  jak
+% Corrected a misspelled word. -jak
+%
 % Revision 1.2  1997/10/29 00:10:44  jak
 % Fixed some problems with the output from eval - needs cleanup. -jak
 %
