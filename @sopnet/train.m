@@ -20,7 +20,7 @@ function p = train(p, I_samples, O_samples, varargin)
 %                     min (:,1) and max (:,2)
 %                     input data ranges.
 %
-% $Id: train.m,v 1.2 1997/11/08 07:11:24 jak Exp $
+% $Id: train.m,v 1.3 1997/11/18 16:50:29 jak Exp $
 %
 
   % ---------------------------------------
@@ -79,17 +79,17 @@ function p = train(p, I_samples, O_samples, varargin)
   % ---------------------------------------
   % By Singular-Value Decomposition! (Works)
   %    
-%    [U, S, V] = svd( HtH );
-%    [d1,d2] = size( S );
-%    Sinv = sparse( d1, d1 );
-%    for i=1: d1
-%        if (S(i,i) < 10^-20 * S(1,1))
-%            Sinv(i,i) = 0.0;
-%        else
-%            Sinv(i,i) = 1.0 / S(i,i);
-%        end
-%    end
-%    p.Wo = ((V * Sinv) * (U' * HtB))';
+    [U, S, V] = svd( HtH );
+    [d1,d2] = size( S );
+    Sinv = sparse( d1, d1 );
+    for i=1: d1
+        if (S(i,i) < 10^-20 * S(1,1))
+            Sinv(i,i) = 0.0;
+        else
+            Sinv(i,i) = 1.0 / S(i,i);
+        end
+    end
+    p.Wo = ((V * Sinv) * (U' * HtB))';
     
   % ---------------------------------------
   % QR Method: (Works)
@@ -101,38 +101,39 @@ function p = train(p, I_samples, O_samples, varargin)
   % ---------------------------------------
   % Standard Method: (Works) 
   %
-    p.Wo = HtB' / HtH ;
+%    p.Wo = HtB' / HtH ;
 
   % ---------------------------------------
   % Calculate Sum Square Error
   %
     Y = (p.Wo * H');
     err =  Y - O_samples';
-    sse = 0.0;
+    mse = 0.0;
     for i=1:outputs
-        sse = sse + err(i, :) * err( i, : )';
+        mse = mse + (err(i, :) * err( i, : )') / (osamples * outputs);
     end
 
   % ---------------------------------------
   % Calculate Structure and Data Size Penalty Terms
   %
     ParamCnt = p.outputs * p.hidden_units +  p.hidden_units * p.inputs; 
-    DataCnt  = isamples * p.inputs + osamples * p.outputs; 
+    DataCnt  = isamples * (p.inputs + p.outputs); 
 
   % ---------------------------------------
   % Form Convergence Criterion
   %
-    SEC = DataCnt * log( sse ) ...
+    SEC = DataCnt * log( mse ) ...
               + ParamCnt * log( DataCnt );
     
-    fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', p.hidden_units, SEC, sse );
+    fprintf( 1, '%d nodes: SEC = %f, mse = %f\n', p.hidden_units, SEC, mse );
     
     if 1 == p.freezeHiddenLayer
         return;
     end
     
     AugmentCnt = 10;
-    iterate = 0;
+    MaxIterations = 5;
+    iterate = 1;
     quit = 0;
     while ( 1 ~= quit )
       % ---------------------------------------
@@ -158,54 +159,60 @@ function p = train(p, I_samples, O_samples, varargin)
         augH = [ H, V ];
         hidden_units = p.hidden_units+AugmentCnt;
 
+      % TEST  
+%        [Wh,Bh] = nwtan( hidden_units, inputs, MaM );
+%        augH   = [ tansig( Wh * I_samples', Bh)' ];
+%        augHtH = augH' * augH;
+%        augHtB = augH' * O_samples;
+        
       % ---------------------------------------
       % Solve for new Output Layer Weights
       % (Standard Method)
       %
-        Wo = augHtB' / augHtH ;
+%        Wo = augHtB' / augHtH ;
         
       % ---------------------------------------
       % By Singular-Value Decomposition! (Works)
       %    
-%        [U, S, V] = svd( augHtH );
-%        [d1,d2] = size( S );
-%        Sinv = sparse( d1, d1 );
-%        for i=1: d1
-%            if (S(i,i) < 10^-20 * S(1,1))
-%                Sinv(i,i) = 0.0;
-%            else
-%                Sinv(i,i) = 1.0 / S(i,i);
-%            end
-%        end
-%        Wo = ((V * Sinv) * (U' * augHtB))';
+        [U, S, V] = svd( augHtH );
+        [d1,d2] = size( S );
+        Sinv = sparse( d1, d1 );
+        for i=1: d1
+            if (S(i,i) < 10^-20 * S(1,1))
+                Sinv(i,i) = 0.0;
+            else
+                Sinv(i,i) = 1.0 / S(i,i);
+            end
+        end
+        Wo = ((V * Sinv) * (U' * augHtB))';
 
       % ---------------------------------------
       % Calculate Sum Square Error
       %
         Y = (Wo * augH');
         err =  Y - O_samples';
-        newsse = 0.0;
+        newmse = 0.0;
         for i=1:outputs
-            newsse = newsse + err(i, :) * err(i, :)' ;
+            newmse = newmse + err(i, :) * err(i, :)' / (osamples * outputs) ;
         end
         
       % ---------------------------------------
       % Calculate Structure and Data Size Penalty Terms
       %
         ParamCnt =  p.outputs * hidden_units +  hidden_units * p.inputs;
-        DataCnt  = isamples * p.inputs + osamples * p.outputs; 
+        DataCnt  = isamples * (p.inputs + p.outputs); 
         
       % ---------------------------------------
       % Form Convergence Criterion
       %
-        newSEC = DataCnt * log( newsse ) ...
+        newSEC = DataCnt * log( newmse ) ...
                  +  ParamCnt * log( DataCnt );
               
-        fprintf( 1, '%d nodes: SEC = %f, sse = %f\n', hidden_units, newSEC , newsse);
+        fprintf( 1, '%d nodes: SEC = %f, mse = %f\n', hidden_units, newSEC , newmse);
         
         if ( newSEC < SEC )
             SEC = newSEC;
-            sse = newsse;
+            mse = newmse;
             HtH = augHtH;
             HtB = augHtB;
             H   = augH;
@@ -213,14 +220,14 @@ function p = train(p, I_samples, O_samples, varargin)
             p.Bh = Bh;
             p.hidden_units = hidden_units;
             p.Wo = Wo;
-            iterate = 0;
+            iterate = 1;
             quit = 0;
-        elseif (10 < iterate) & (AugmentCnt == 1)
-            fprintf( 1, 'DONE! %d nodes: SEC = %f, sse = %f\n', ...
-                p.hidden_units, SEC, sse );
+        elseif (MaxIterations <= iterate) & (AugmentCnt == 1)
+            fprintf( 1, 'DONE! %d nodes: SEC = %f, mse = %f\n', ...
+                p.hidden_units, SEC, mse );
             quit = 1;            
-        elseif (10 < iterate)
-            iterate = 0;
+        elseif (MaxIterations <= iterate)
+            iterate = 1;
             quit = 0;
             AugmentCnt = AugmentCnt-1;
         else
@@ -234,6 +241,9 @@ function p = train(p, I_samples, O_samples, varargin)
 % ****************************************
 % History:
 % $Log: train.m,v $
+% Revision 1.3  1997/11/18 16:50:29  jak
+% Some experiments to test performance under different SECs. -jak
+%
 % Revision 1.2  1997/11/08 07:11:24  jak
 % Corrections for truth in SEC calculations! Improved performance. -jak
 %

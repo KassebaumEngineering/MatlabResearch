@@ -17,7 +17,7 @@ function p = sopnet(I_samples, O_samples, varargin )
 %     using random Nguyen-Widrow values.  The min and max are  
 %     used to adjust the Nguyen-Widrow values.
 %
-% $Id: sopnet.m,v 1.1 1997/11/08 04:37:55 jak Exp $
+% $Id: sopnet.m,v 1.2 1997/11/18 16:50:28 jak Exp $
 %
  
     [  samples,  inputs ] = size( I_samples );
@@ -26,7 +26,7 @@ function p = sopnet(I_samples, O_samples, varargin )
     p = struct( ...
         'inputs'           , inputs  ...
        ,'outputs'          , 1       ...
-       ,'hidden_units'     , 10      ...
+       ,'hidden_units'     , 0       ...
        ,'Wh'               , []      ...
        ,'Bh'               , []      ...
        ,'Wo'               , []      ...
@@ -46,8 +46,13 @@ function p = sopnet(I_samples, O_samples, varargin )
             min = I_samples(i, r);
         end
         end
-        MaM(r,1)=min;
-        MaM(r,2)=max;
+        if min == max
+            MaM(r,1)= -1;
+            MaM(r,2)= 1;
+        else
+            MaM(r,1)=min;
+            MaM(r,2)=max;
+        end
     end
 
     if ~isempty( varargin ) 
@@ -89,6 +94,9 @@ function [ W1, B1, W2 ] = initialize( inputs, hidden_units, outputs, MinsAndMaxs
 % ****************************************
 % History:
 % $Log: sopnet.m,v $
+% Revision 1.2  1997/11/18 16:50:28  jak
+% Some experiments to test performance under different SECs. -jak
+%
 % Revision 1.1  1997/11/08 04:37:55  jak
 % First Turn in of Self-Organizing Percepton Network! - jak
 %
