@@ -6,7 +6,7 @@
 % Description:
 %
 %
-% $Id: pshnn.m,v 1.4 1997/11/05 04:39:34 jak Exp $
+% $Id: pshnn.m,v 1.5 1997/11/07 05:38:22 jak Exp $
 %
 %*****************************************************
 %
@@ -30,8 +30,10 @@
 %
 % Build the 1st N-unit and evaluate it.
 %
-  net = rfft_fln( inputsamples, 64, outputsamples );
-%  net = chen_fln( inputsamples, 32, outputsamples );
+%  net = rfft_fln( inputsamples, 64, outputsamples );
+  net = chen_fln( inputsamples, outputsamples );
+
+%  net = pns_hnn( getTrainingSamples( myData ), 0.5 );
   [ Yc, Y ] = eval( net, inputsamples );
 
 %
@@ -41,7 +43,6 @@
   pc
   tpc
   cmat
-  
   
 %
 % Test The Network
@@ -63,6 +64,9 @@
 % History:
 % 
 % $Log: pshnn.m,v $
+% Revision 1.5  1997/11/07 05:38:22  jak
+% Added more testing code. -jak
+%
 % Revision 1.4  1997/11/05 04:39:34  jak
 % Added a commented line to compare with chen_fln. -jak
 %
